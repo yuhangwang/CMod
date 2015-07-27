@@ -1,0 +1,4 @@
+setenv _dir_root /home/steven/Install/conda
+
+prepend-path PATH ${_dir_root}/bin
+prepend-path LD_LIBRARY_PATH ${_dir_root}/lib

@@ -1,0 +1,9 @@
+module() {
+	eval `/home/steven/Install/cmod/1.1/libexec/cmod sh $*` 
+}
+
+if [ "$MODULEPATH" = "" ]
+then
+	MODULEPATH=/home/steven/Install/cmod/1.1/etc/cmod/modulefiles
+	export MODULEPATH
+fi

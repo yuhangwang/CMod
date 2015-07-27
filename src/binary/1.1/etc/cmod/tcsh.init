@@ -1,0 +1,5 @@
+alias module 'eval `/home/steven/Install/cmod/1.1/libexec/cmod csh \!*`'
+
+if ( ! $?MODULEPATH ) then
+	setenv MODULEPATH /home/steven/Install/cmod/1.1/etc/cmod/modulefiles
+endif
