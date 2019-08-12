@@ -1,0 +1,3 @@
+prepend-path PATH ${HOME}/install/cuda/10.1/bin
+prepend-path PATH ${HOME}/install/cuda/10.1/NsightCompute-2019.3
+prepend-path LD_LIBRARY_PATH ${HOME}/install/cuda/10.1/lib64

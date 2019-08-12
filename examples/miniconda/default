@@ -1,0 +1,2 @@
+prepend-path PATH ${HOME}/install/miniconda/3/bin
+unsetenv PYTHONHOME

@@ -23,12 +23,15 @@ The source file can be found at http://www.lysator.liu.se/cmod/
 # How to use it
 - First, you need to make a folder containing the CMod scripts.
    `mkdir -p ~/modules/python`
-- Then create a new file `~/modules/python/default`   
-  with the following content.
+- Then create a new file `~/modules/python/default`  
+  with the following content. 
   ```
   prepend-path PATH /Users/steven/install/miniconda/3/bin
   prepend-path DYLD_LIBRARY_PATH /Users/steven/install/miniconda/3/lib
   ```
+- You can also use other file names
+  such as `~/modules/python/3.7`. Then you have to use
+  `module add python/3.7` instead of just `module add python`.
  - Add the following lines in your `~/.bashrc` file
    ```
    source $HOME/install/cmod/1.1/etc/cmod/bash.init
@@ -40,8 +43,30 @@ The source file can be found at http://www.lysator.liu.se/cmod/
  - To remove the module, use `module rm python`
  - To see the currently loaded modules, use `module list`
  - You can add more module files to `~/modules` similar to the python example.
+ 
+ # Commands available in a CMod specification script
+- `append-path`: Appending a directory to a path.
+- `prepend-path`: Prepending a directory to a path.
+- `remove-path`: Removing a directory from a path.
+- `setenv`: Setting a variable to a fixed value.
+- `unsetenv`: Unsetting a variable.
+
+# Most commonly used module commands
+- `module add`: add module(s), e.g., `module add python/3.7`
+- `module try-add`: same as `module add` except without error messages if the module
+   is not found.
+- `module rm`: remove a loaded module, e.g., `module rm python/3.7`
+- `module use`: add a new path that contains module scripts, e.g., `module use /home/steven/modules/apps`.
+   In the `apps` folder, you can put subfolders which contain module specification scripts, e.g., `apps/python/default`.
+- `module unuse`: remove a path searchable by `module`
+- `module list`: list currently loaded modules
+- `module avail`: list all available modules, a very useful feature to see all the software you have installed.
+
 
 # Documentation
 A complete documentation can be found in the `info` folder of your cmod installation path.  
 You can also browse the documentation contained in the [usage/cmod.md](https://github.com/yuhangwang/CMod/blob/master/usage/cmod.md)
 file of this Github repository.
+
+# Examples
+For some example module specification scripts, take a look at the [examples](https://github.com/yuhangwang/CMod/blob/master/examples) folder.
