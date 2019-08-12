@@ -20,7 +20,10 @@ The source file can be found at http://www.lysator.liu.se/cmod/
 - `make check`
 - `make install`
 
-# How to use it
+# Use case
+- Suppose we have installed a new version of python and we want to
+  use `module` to dynamically loaded it into the our shell environment
+  when we need it and unload it when we are done.
 - First, you need to make a folder containing the CMod scripts.
    `mkdir -p ~/modules/python`
 - Then create a new file `~/modules/python/default`  
