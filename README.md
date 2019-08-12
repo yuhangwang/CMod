@@ -24,8 +24,10 @@ The source file can be found at http://www.lysator.liu.se/cmod/
   ```source $HOME/install/cmod/1.1/etc/cmod/bash.init```
 - If you are using `tcsh` shell, add the following line to your `.cshrc` file
   ```source $HOME/install/cmod/1.1/etc/cmod/tcsh.init```
-- To make dynamically load/unload some software into your shell environment, see
-  the `use case` below.
+- To dynamically load/unload some software into your shell environment, 
+  you need to write some module specification scripts and use 
+  `module use [path to your module specification files]`
+  command to make `module` aware of these scripts. Take a look at the `use case` below.
 
 
 # Use case
