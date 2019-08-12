@@ -20,7 +20,7 @@ The source file can be found at http://www.lysator.liu.se/cmod/
 - `make check`
 - `make install`
 
-# Post installation
+# How to use it
 - First, you need to make a folder containing the CMod scripts.
    `mkdir -p ~/modules/python`
 - Then create a new file `~/modules/python/default`   
