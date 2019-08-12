@@ -27,7 +27,8 @@ The source file can be found at http://www.lysator.liu.se/cmod/
 - To dynamically load/unload some software into your shell environment, 
   you need to write some module specification scripts and use 
   `module use [path to your module specification folder]`
-  command to make `module` aware of these scripts. Take a look at the `use case` below.
+  command to make `module` aware of these scripts. Take a look at the 
+  [use case](https://github.com/yuhangwang/CMod#use-case) below.
 
 
 # Use case
