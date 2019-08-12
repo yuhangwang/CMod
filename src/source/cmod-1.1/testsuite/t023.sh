@@ -1,0 +1,1 @@
+../cmod sh syntaxerror foo

@@ -1,0 +1,4 @@
+#%Module
+setenv       pfxbeta  ${HOME}/pfxbeta/${CEDER_ARCH}
+prepend-path PATH     ${HOME}/pfxbeta/${CEDER_ARCH}/bin
+prepend-path INFOPATH ${HOME}/pfxbeta/${CEDER_ARCH}/info

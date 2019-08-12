@@ -1,0 +1,15 @@
+two
+one
+LOADEDMODULES=t065-1;
+export LOADEDMODULES;
+foo=bar;
+export foo;
+fie=path;
+export fie;
+xyz=/usr/local/bin;
+export xyz;
+PREPENDED=/usr/cross-bin:/usr/local/bin;
+export PREPENDED;
+NEXT=/usr/local/bin;
+export NEXT;
+0

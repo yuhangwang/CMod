@@ -1,0 +1,14 @@
+Usage: module sub-command [args...]
+
+  Available sub-commands:
+
+    add|load  modulefile [modulefile...]    Add module(s)
+    try-add   modulefile [modulefile...]    Add, don't complain if not found
+    rm|unload modulefile [modulefile...]    Remove module(s)
+    use       dir                           Add to MODULEPATH
+    unuse     dir                           Remove from MODULEPATH
+    list                                    List loaded modules
+    avail                                   List available modules
+    --version                               Show version information
+
+1

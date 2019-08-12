@@ -1,0 +1,154 @@
+dnl  cmod - set up the user environment with module files.
+dnl  Copyright (C) 1997, 1998 by the authors of cmod (see AUTHORS).
+dnl
+dnl  This program is free software; you can redistribute it and/or modify
+dnl  it under the terms of the GNU General Public License as published by
+dnl  the Free Software Foundation; either version 2 of the License, or
+dnl  (at your option) any later version.
+dnl
+dnl  This program is distributed in the hope that it will be useful,
+dnl  but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl  GNU General Public License for more details.
+dnl
+dnl  You should have received a copy of the GNU General Public License
+dnl  along with this program; if not, write to the Free Software
+dnl  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+
+dnl Process this file with autoconf to produce a configure script.
+
+AC_REVISION($Revision: 1.44 $)dnl
+AC_INIT(cmod.c)
+AM_INIT_AUTOMAKE(cmod, 1.1)
+AM_CONFIG_HEADER(config.h)
+
+dnl Checks for programs.
+
+dnl Python is needed to recreate testsuite/Makefile.am.  The check for
+dnl python is modelled after the AM_MISSING_PROG macro, but with added
+dnl caching.  We cannot use AM_MISSING_PROG, since python doesn't
+dnl implement a --version flag.
+
+AC_MSG_CHECKING(for working python)
+AC_CACHE_VAL([cmod_cv_prog_python],
+[if (python -c "import sys;sys.exit(0)") < /dev/null > /dev/null 2>&1; then
+    cmod_cv_prog_python=yes
+else
+    cmod_cv_prog_python=no
+fi])
+[if test $cmod_cv_prog_python = yes ; then
+    PYTHON=python]
+    AC_MSG_RESULT([found])
+[else
+    PYTHON="$missing_dir/missing python"]
+    AC_MSG_RESULT([missing])
+[fi]
+AC_SUBST(PYTHON)
+
+AC_PROG_CC
+AC_AIX
+AC_ISC_POSIX
+AC_MINIX
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_DIRENT
+AC_HEADER_STAT
+AC_HEADER_SYS_WAIT
+CMOD_HEADER_PARAM
+AC_CHECK_HEADERS(stdlib.h stdarg.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AM_C_PROTOTYPES
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+dnl m88k, encore, Unix 3.0 understands "__inline" but not "static __inline".
+AC_MSG_CHECKING([whether $CC understands static inline])
+AC_CACHE_VAL([cmod_cv_c_static_inline_understood],
+    AC_TRY_COMPILE([static inline int cmod_i(int y) { return y+y; }],
+	[cmod_i(7);],
+	[cmod_cv_c_static_inline_understood=yes],
+	[cmod_cv_c_static_inline_understood=no]))
+AC_MSG_RESULT($cmod_cv_c_static_inline_understood)
+[if test $cmod_cv_c_static_inline_understood = yes ; then]
+    AC_DEFINE(static_inline, [static inline])
+[else]
+    AC_DEFINE(static_inline, [static])
+[fi]
+
+AC_MSG_CHECKING([whether errno.h declares errno])
+AC_CACHE_VAL([cmod_cv_decl_errno_in_errno_h],
+    AC_TRY_COMPILE(
+	[#include <errno.h>],
+	[errno = 0;],
+	[cmod_cv_decl_errno_in_errno_h=yes],
+	[cmod_cv_decl_errno_in_errno_h=no]))
+AC_MSG_RESULT($cmod_cv_decl_errno_in_errno_h)
+[if test $cmod_cv_decl_errno_in_errno_h = yes ; then]
+    AC_DEFINE(HAVE_ERRNO_IN_ERRNO_H)
+[fi]
+
+AC_MSG_CHECKING([whether $CC understands __attribute__((unused))])
+AC_CACHE_VAL([cmod_cv_c_attribute_unused_understood],
+    dnl gcc 2.6.3 understands the __attribute__((unused)) syntax
+    dnl enough that it prints a warning and ignores it when the
+    dnl variable "i" is declared inside the function body, but it
+    dnl barfs on the construct when it is used in a
+    dnl parameter-declaration.  That is why we misuse AC_TRY_COMPILE
+    dnl by inserting a function definition in the INCLUDES part.
+    AC_TRY_COMPILE([int cmod_x(int y __attribute__((unused))) { return 7; }],
+	[int i __attribute__((unused));],
+	[cmod_cv_c_attribute_unused_understood=yes],
+	[cmod_cv_c_attribute_unused_understood=no]))
+AC_MSG_RESULT($cmod_cv_c_attribute_unused_understood)
+[if test $cmod_cv_c_attribute_unused_understood = yes ; then]
+    AC_DEFINE(HAVE_ATTRIBUTE_UNUSED)
+[fi]
+
+[if test -n "$GCC"; then
+    CFLAGS="$CFLAGS -Wall -W -Wtraditional -Wshadow -Wpointer-arith"]
+    CMOD_COMPILER_CC_ACCEPTS([-Wbad-function-cast])
+    CMOD_COMPILER_CC_ACCEPTS([-Wcast-qual])
+    CMOD_COMPILER_CC_ACCEPTS([-Wcast-align])
+    CMOD_COMPILER_CC_ACCEPTS([-Wwrite-strings])
+    CMOD_COMPILER_CC_ACCEPTS([-Waggregate-return])
+    CMOD_COMPILER_CC_ACCEPTS([-Wstrict-prototypes])
+    CMOD_COMPILER_CC_ACCEPTS([-Wmissing-prototypes])
+    CMOD_COMPILER_CC_ACCEPTS([-Wmissing-declarations])
+    CMOD_COMPILER_CC_ACCEPTS([-Wnested-externs])
+    CMOD_COMPILER_CC_ACCEPTS([-pipe])
+[fi]
+
+dnl Checks for library functions.
+AC_CHECK_LIB(posix, opendir)
+AC_FUNC_CLOSEDIR_VOID
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(readlink)
+AC_REPLACE_FUNCS(strdup memmove)
+
+dnl Get current working directory.
+dnl
+dnl We prefer getcwd.  If neither getcwd nor getwd is present we
+dnl supply a getcwd replacement.  Prefer getwd to our replacement
+dnl since our replacement uses popen("pwd"), which is slow and
+dnl error prone.
+dnl
+dnl Code should test HAVE_GETWD and assume that getcwd is available
+dnl unless HAVE_GETWD is defined.
+dnl
+AC_CHECK_FUNCS(getcwd getwd, break)
+[if test "$ac_cv_func_getcwd" = yes || test "$ac_cv_func_getwd" = yes
+then
+	:
+else]
+	AC_REPLACE_FUNCS(getcwd)
+	AC_PATH_PROG(pwd_path, pwd, "/bin/pwd")
+	AC_DEFINE_UNQUOTED(PWD_PATH, "$pwd_path")
+[fi]
+
+AC_OUTPUT(Makefile testsuite/Makefile)

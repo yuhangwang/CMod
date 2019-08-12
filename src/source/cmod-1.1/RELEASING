@@ -1,0 +1,37 @@
+How to make a release of cmod:
+
+* Change the version number in the AM_INIT_AUTOMAKE macro in configure.in.
+* Update the year in all copyright statements.
+* Update README.DEVO, especially the versions of the various tools used.
+* Update NEWS if this is a full release.
+* Ensure that cmod.texi is updated.
+* Run C-c C-u C-a on cmod.texi to update the menues.
+* Update README.
+* Commit all code.
+* Run these commands to ensure that all generated files are up-to-date:
+
+	./mkrel.sh
+
+* Test the resulting archive on several architectures.  If any
+  problems are found, fix them, and start from the beginning.  This
+  step may be skipped if this is a snapshot release.
+* Set a CVS tag.  The tag for version 1.1 was set like this:
+
+	cvs tag cmod_1_1_final
+
+  Snapshot releases are tagged like this:
+
+	cvs tag cmod_1_1_post_1
+
+* Move the tar file to 
+	ftp://ftp.lysator.liu.se/pub/unix/cmod/
+	aka /lysator/ftp/pub/unix/cmod/
+  Snapshot releases go to
+	http://www.lysator.liu.se/cmod/
+	aka /net/hanna/export/www3/projects/cmod/
+
+* Announce the release in the following forums:
+
+	- The LysKOM conference "cmod".
+	- The web page http://www.lysator.liu.se/cmod/
+	  aka /net/hanna/export/www3/projects/cmod/index.html

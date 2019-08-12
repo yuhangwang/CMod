@@ -1,0 +1,5 @@
+# This is a comment that spans one line.
+prepend-path PATH /bin
+# This is a comment that
+# spans two lines.
+prepend-path PATH

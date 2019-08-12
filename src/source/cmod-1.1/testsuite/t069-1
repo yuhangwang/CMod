@@ -1,0 +1,2 @@
+setenv zero ""
+${zero?this test passes}${zero:?errorMSG}${zero:?execution never gets here}

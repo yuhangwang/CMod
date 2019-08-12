@@ -1,0 +1,2 @@
+../cmod: @MODULEPATH@/t030-vi/. lacks @MODULEPATH@/t030-vi/./default
+1

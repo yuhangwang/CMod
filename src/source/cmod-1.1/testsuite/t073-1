@@ -1,0 +1,3 @@
+# An empty line.
+# Yet another empty line
+prepend-path PATH ${USER

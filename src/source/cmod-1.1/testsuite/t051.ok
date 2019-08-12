@@ -1,0 +1,9 @@
+one /bin:/usr/bin:/kalle
+two /bin:/usr/bin:/kalle
+three /bin:/usr/bin:/kalle:/pelle
+four /bin:/usr/bin:/kalle:/pelle:/sune
+LOADEDMODULES=t051-1;
+export LOADEDMODULES;
+PATH=/bin:/usr/bin:/kalle:/pelle:/sune;
+export PATH;
+0

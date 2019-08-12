@@ -1,0 +1,3 @@
+# no error on line 3
+
+setenv foo "bar gazonk"

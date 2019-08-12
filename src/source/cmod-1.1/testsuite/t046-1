@@ -1,0 +1,4 @@
+setenv LOC local
+prepend-$(echo path PATH /usr/${LOC})/bin
+setenv LOC remote
+prepend-path$(echo ' PATH /usr/${LOC}')/bin

@@ -1,0 +1,5 @@
+append-path PATH /kalle
+$(echo one ${PATH} >&2)append-path PATH /pelle$(echo two ${PATH} >&2)
+$(echo three ${PATH} >&2)
+append-path PATH /sune
+$(echo four ${PATH} >&2)

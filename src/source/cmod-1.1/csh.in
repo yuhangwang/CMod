@@ -1,0 +1,5 @@
+alias module 'eval `@CMOD@ csh \!*`'
+
+if ( ! $?MODULEPATH ) then
+	setenv MODULEPATH @MODULEPATH@
+endif

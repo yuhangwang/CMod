@@ -1,0 +1,15 @@
+one kalle
+two kalle
+three kalle:/pelle
+four 
+five pfife
+six 
+seven 
+eight gazonk
+LOADEDMODULES=t053-1;
+export LOADEDMODULES;
+unset FYFI;
+unset FIFY;
+FYFY=gazonk;
+export FYFY;
+0

@@ -1,0 +1,3 @@
+@MODULEPATH@/t064-1:2: failed to find t064-2 in $MODULEPATH.
+unset foo;
+1

@@ -1,0 +1,6 @@
+LOADEDMODULES=t047-1;
+export LOADEDMODULES;
+unset LOC;
+PATH=/bin:/usr/bin;
+export PATH;
+0

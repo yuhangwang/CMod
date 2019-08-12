@@ -1,0 +1,5 @@
+LOADEDMODULES=t062-1;
+export LOADEDMODULES;
+crazy=kalle;
+export crazy;
+0

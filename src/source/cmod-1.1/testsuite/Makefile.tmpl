@@ -1,0 +1,165 @@
+#  cmod - set up the user environment with module files.
+#  Copyright (C) 1997, 1998 by the authors of cmod (see AUTHORS).
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+
+## Process this file with mkmf.py to produce Makefile.am.
+## Process Makefile.am with automake to produce Makefile.in.
+## Process Makefile.in with configure to produce Makefile.
+## Process Makefile with make to produce the output string "All tests passed".
+
+AUTOMAKE_OPTIONS = ../ansi2knr gnu
+
+PYTHON = @PYTHON@
+RM = rm -f
+
+# Test suite support.
+noinst_PROGRAMS = clean-sh
+MODULES = %(modules)s
+
+SIMPLE_SH_TESTS = %(simplesh)s
+
+SIMPLE_OK_FILES = %(simpleok)s
+
+GENERATED_OK_FILES_SRC = %(genoksrc)s
+GENERATED_OK_FILES = %(genok)s
+
+GENERATED_SH_TESTS_SRC = %(genshsrc)s
+GENERATED_SH_TESTS = %(gensh)s
+
+clean_sh_SOURCES = clean-sh.c
+
+INCLUDES = -I$(top_srcdir)
+
+MOSTLYCLEANFILES = $(GENERATED_OK_FILES) $(GENERATED_SH_TESTS) \
+	*.outss *.outss1 *.outsg *.outsg1 \
+	*.outgs *.outgs1 *.outgg *.outgg1
+
+
+MAINTAINERCLEANFILES = Makefile.am Makefile.in
+
+MOSTLYCLEANDIRS = t041-dir t042-dir t055-dir t057-dir t058-dir t059-dir
+
+mostlyclean-local:
+	$(RM) -r $(MOSTLYCLEANDIRS)
+
+SH_TESTS = $(SIMPLE_SH_TESTS) $(GENERATED_SH_TESTS)
+
+TEST_RESULTS = $(TEST_SS) $(TEST_SG) $(TEST_GS) $(TEST_GG)
+
+TEST_SS = %(outss)s
+TEST_SG = %(outsg)s
+TEST_GS = %(outgs)s
+TEST_GG = %(outgg)s
+
+CMODTEST = ./clean-sh MODULEPATH=$(srcdir)
+
+check-local: $(TEST_RESULTS)
+	@echo All tests passed
+
+SUFFIXES = .outss .outsg .outgs .sh .ok .gen .in
+
+# The "(if ... ; then echo $? ; else echo $? ; fi)" construct used in
+# targets TEST_SS, TEST_SG, TEST_GS and TEST_GG may seem strange, but
+# it is needed on SunOS 4.1.4 with a native make and /bin/sh.
+# Rewriting the command "(... ; echo $?)" will cause make to complain
+# if the "..." command exits with a non-zero exit status.
+
+$(TEST_SS):
+	@$(RM) $@ $@1
+	(base=`basename $@ .outss` ;\
+	(if $(CMODTEST) $(srcdir)/$$base.sh ; \
+	 then echo $$? ; else echo $$? ; fi) > $@1 2>&1 ;\
+	if cmp $@1 $(srcdir)/$$base.ok ; then \
+	  mv $@1 $@ ; \
+	else \
+	  echo $@1:1:Generated file differ 2>&1; \
+	  echo $(srcdir)/$$base.ok:1:from the expected result. 2>&1; \
+	  diff -u $(srcdir)/$$base.ok $@1; \
+	  exit 1 ; \
+	fi)
+	@echo PASS: $@
+
+$(TEST_SG):
+	@$(RM) $@ $@1
+	(base=`basename $@ .outsg` ;\
+	(if $(CMODTEST) $(srcdir)/$$base.sh ; \
+	 then echo $$? ; else echo $$? ; fi) > $@1 2>&1 ;\
+	if cmp $@1 $$base.ok.gen ; then \
+	  mv $@1 $@ ; \
+	else \
+	  echo $@1:1:Generated file differ 2>&1; \
+	  echo $$base.ok.gen:1:from the expected result. 2>&1; \
+	  diff -u $$base.ok.gen $@1; \
+	  exit 1 ; \
+	fi)
+	@echo PASS: $@
+
+$(TEST_GS):
+	@$(RM) $@ $@1
+	(base=`basename $@ .outgs` ;\
+	(if $(CMODTEST) $$base.sh.gen ; \
+	 then echo $$? ; else echo $$? ; fi) > $@1 2>&1 ;\
+	if cmp $@1 $(srcdir)/$$base.ok ; then \
+	  mv $@1 $@ ; \
+	else \
+	  echo $@1:1:Generated file differ 2>&1; \
+	  echo $(srcdir)/$$base.ok:1:from the expected result. 2>&1; \
+	  diff -u $(srcdir)/$$base.ok $@1; \
+	  exit 1 ; \
+	fi)
+	@echo PASS: $@
+
+$(TEST_GG):
+	@$(RM) $@ $@1
+	(base=`basename $@ .outgg` ;\
+	(if $(CMODTEST) $$base.sh.gen ; \
+	 then echo $$? ; else echo $$? ; fi) > $@1 2>&1 ;\
+	if cmp $@1 $$base.ok.gen ; then \
+	  mv $@1 $@ ; \
+	else \
+	  echo $@1:1:Generated file differ 2>&1; \
+	  echo $$base.ok.gen:1:from the expected result. 2>&1; \
+	  diff -u $$base.ok.gen $@1; \
+	  exit 1 ; \
+	fi)
+	@echo PASS: $@
+
+$(GENERATED_OK_FILES): Makefile
+	   $(RM) $@.tmp $@
+	   sed -e 's%%@MODULEPATH@%%$(srcdir)%%g' \
+		   < $(srcdir)/`basename $@ .gen`.in > $@.tmp
+	   mv $@.tmp $@
+
+$(GENERATED_SH_TESTS): Makefile
+	   $(RM) $@.tmp $@
+	   sed -e 's%%@MODULEPATH@%%$(srcdir)%%g' \
+		   < $(srcdir)/`basename $@ .gen`.in > $@.tmp
+	   mv $@.tmp $@
+
+EXTRA_DIST = $(SIMPLE_SH_TESTS) $(GENERATED_SH_TESTS_SRC) $(MODULES) \
+	.cvsignore $(GENERATED_OK_FILES_SRC) $(SIMPLE_OK_FILES) \
+	Makefile.tmpl mkmf.py
+
+dist-hook:
+	for dir in t030-fb t030-vi t030-sy ; do \
+	  cp -a $(srcdir)/$$dir $(distdir) || exit 1; \
+	  find $(distdir)/$$dir -name CVS -print | xargs $(RM) -r ; \
+	done
+
+$(srcdir)/Makefile.am: Makefile.tmpl mkmf.py
+	cd $(srcdir) && $(PYTHON) mkmf.py Makefile.tmpl Makefile.am
+
+%(dep_lines)s

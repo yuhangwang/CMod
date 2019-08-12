@@ -1,0 +1,5 @@
+#%Module
+append-path PATH /usr/bin:/usr/sbin
+append-path MANPATH /usr/man
+
+

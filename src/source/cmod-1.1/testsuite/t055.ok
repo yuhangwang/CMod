@@ -1,0 +1,11 @@
+LOADEDMODULES=ucb:cmod:unix:X11:emacs:local:user:default;
+export LOADEDMODULES;
+PATH=/home/ceder/pfx/mips--sgi-irix5.4/bin:/home/ceder/common/scripts:/sw/local/bin:/usr/bin/X11:/usr/bin:/usr/sbin:/usr/etc:/usr/bsd::/sbin:/bin;
+export PATH;
+INFOPATH=/home/ceder/pfx/mips--sgi-irix5.4/info:/sw/local/info:/sw/common/info:/sw/common/share/emacs/19.34/info:/sw/common/share/emacs/site-info:/sw/modules/info;
+export INFOPATH;
+MANPATH=/sw/local/man:/usr/share/catman:/usr/share/man:/usr/catman:/usr/man;
+export MANPATH;
+pfx=/home/ceder/pfx/mips--sgi-irix5.4;
+export pfx;
+0

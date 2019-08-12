@@ -1,0 +1,1 @@
+prepend-path PATH /usr/ucb/bin:/usr/local/bin

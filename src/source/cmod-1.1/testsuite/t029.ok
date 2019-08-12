@@ -1,0 +1,5 @@
+LOADEDMODULES=t029-5:t029-2:t029-3:t029-4:t029-1;
+export LOADEDMODULES;
+PATH=/usr/X11/bin:/usr/openwin/bin:/bin:/usr/bin:/usr/sbin:/usr/etc:/sw/local/bin;
+export PATH;
+0

@@ -1,0 +1,5 @@
+LOADEDMODULES=t045-1;
+export LOADEDMODULES;
+PATH=/usr/local/bin:/bin:/usr/bin;
+export PATH;
+0

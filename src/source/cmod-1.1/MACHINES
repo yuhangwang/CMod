@@ -1,0 +1,77 @@
+Cmod should compile cleanly on most machines.  Some archaic and
+severely broken machines may however require some special steps.  This
+is a list of such machines.
+
+* ABC 1600 with ABCenix 5.18
+
+	This operating system was probably released in 1985 or 1986.
+	You must have at least 1 MB of free disk space when you run
+	configure, or you will get the infamous "no space" error
+	message.  You probably need a better /bin/sh than the one
+	supplied with the system; the one I used is 51422 bytes and
+	dated Dec 12 1985.  I think the original /bin/sh is 41010 and
+	dated Oct 31 1985.
+
+	ABCenix declares the typedef msize_t, but not size_t.  The
+	configure script is confused by this.  The easiest workaround
+	is to run configure like this:
+
+		CFLAGS=-Dsize_t=int /bin/sh configure
+
+	...or this:
+
+		CFLAGS=-Dsize_t=int ./configure
+
+	The above line also fixes another problem: you cannot use "-g"
+	when you link programs.  "cc -g -c foo.c; cc foo.o" works
+	fine, but "cc -g foo.c" and "cc -g foo.o" both fails.  By
+	setting CFLAGS before running configure, you ensure that the
+	configure script doesn't attempt to use the -g flag.
+	
+	If configure fails with a "no space" message it may help to
+	make sure no unnecessary processes (such as cron) are running.
+	It may help to type "set", and then unset everything that
+	isn't strictly necessary.  It may also help to use the other
+	form of the configure statement given above.  I'm not really
+	sure why the configure script sometimes gets the "no space"
+	error.  Anyhow, this is the environment I used when I
+	succeeded to run configure:
+
+		HOME=/users/ceder
+		IFS=" \t\n"
+		MAILCHECK=600
+		PATH=/bin:/usr/bin
+		PS1="ceder@ingrid \$ "
+		PS2="> "
+		SHELL=/bin/sh
+		TERM=vt100
+		USER=ceder
+
+	The following tests fails on this host:
+
+		Test	Reason
+
+	    t042.outss	ABCenix does not support symbolic links.
+			Impact: "default" cannot be a symbolic link.
+	    t043.outsg	STAT_MACROS_BROKEN is true on this platform.
+			Impact: broken error message if attempting to
+			load a module that is a directory that lacks a
+			"default" file.
+	    t044.outgg	See t043.
+
+	Manually touch the relevant files before running "make check"
+	if you want "make check" to complete successfully.
+
+
+
+* HP/UX 9.03 with the bundled cc
+
+	The following tests fail on this platform:
+
+	    t043.outsg	STAT_MACROS_BROKEN is true on this platform.
+			Impact: broken error message if attempting to
+			load a module that is a directory that lacks a
+			"default" file.
+	    t044.outgg	See t043.
+
+	If you use gcc all tests will pass.

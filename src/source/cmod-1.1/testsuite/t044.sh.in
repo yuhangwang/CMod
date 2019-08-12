@@ -1,0 +1,5 @@
+MODULEPATH=@MODULEPATH@/t030-vi:@MODULEPATH@/t030-fb:@MODULEPATH@/t030-sy
+CEDER_ARCH=mips-r3000-sgi-irix4.0.5
+HOME=/home/ceder
+export MODULEPATH CEDER_ARCH HOME
+../cmod sh add .

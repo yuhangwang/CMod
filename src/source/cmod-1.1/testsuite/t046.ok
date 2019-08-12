@@ -1,0 +1,7 @@
+LOADEDMODULES=t046-1;
+export LOADEDMODULES;
+LOC=remote;
+export LOC;
+PATH=/usr/remote/bin:/usr/local/bin:/bin:/usr/bin;
+export PATH;
+0

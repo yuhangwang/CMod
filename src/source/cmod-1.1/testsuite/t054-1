@@ -1,0 +1,11 @@
+setenv FYFI kalle
+$(echo one ${FYFI-} >&2)append-path FYFI /pelle$(echo two ${FYFI} >&2)
+$(echo three ${FYFI-} >&2)
+unsetenv FYFI
+$(set +x;echo four" ${FYFI-}" >&2)
+$(set +x;echo five" ${FIFY-}" >&2)
+unsetenv FIFY
+$(set +x;echo six" ${FIFY-}" >&2)
+$(set +x;echo seven" ${FYFY-}" >&2)
+setenv FYFY gazonk
+$(set +x;echo eight" ${FYFY-}" >&2)

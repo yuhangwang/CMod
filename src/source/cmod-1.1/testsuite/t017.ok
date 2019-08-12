@@ -1,0 +1,3 @@
+setenv LOADEDMODULES t006-1:t009-1:t010-1;
+unsetenv PATH;
+0

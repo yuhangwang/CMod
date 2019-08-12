@@ -1,0 +1,3 @@
+setenv cmd prepend-path
+setenv var PATH
+${cmd:?cmd missing} ${var:?var missing} /opt/SUNwsig/fuego

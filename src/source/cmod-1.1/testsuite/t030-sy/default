@@ -1,0 +1,7 @@
+#%Module
+module add system
+module add games
+module add X11/R4
+module add unix
+module add local
+module add user

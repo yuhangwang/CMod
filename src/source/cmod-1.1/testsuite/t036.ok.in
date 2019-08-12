@@ -1,0 +1,5 @@
+@MODULEPATH@/t036-1:5: syntax error: too few arguments
+  Offending line: prepend-path PATH
+PATH=;
+export PATH;
+1

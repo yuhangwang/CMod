@@ -1,0 +1,3 @@
+#%Module
+prepend-path PATH /sw/local/bin
+prepend-path MANPATH /sw/local/man

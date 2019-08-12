@@ -1,0 +1,211 @@
+Introduction to cmod
+====================
+
+This is cmod, which provides modularized initialization of environment
+variables such as PATH.  Once cmod is installed and configured typing
+"module add tex" might add /sw/tex/teTeX/bin/sparc-solaris2.5.1 to
+PATH, /sw/tex/teTeX/man to MANPATH, etc.  Cmod provides a way for the
+system administrator to define module files (such as "tex") that
+modify the environment in well-defined ways.  It allows the user to
+select the modules that should be active; the user can also override
+the modules provided by the administrator.
+
+Cmod is released under the GNU General Public License; see COPYING for
+the details of that license.
+
+
+
+Distribution overview
+=====================
+
+Some noteworthy files in this distribution are:
+
+  INSTALL    	Generic installation instructions.  See also below.
+  cmod.info	Documentation in info format.
+  cmod.texi	The source for cmod.info; if you have TeX you can
+		"make cmod.ps" to get a printable file.
+  NEWS		What is new in this release?
+  AUTHORS    	Contact and copyright information.
+  COPYING	License information.
+  README.DEVO   What to do if you typed "make maintainer-clean" (or if
+		you got cmod from the CVS repository of Lysator).
+  RELEASING	How to make a release (checklist for the maintainer).
+
+
+
+Basic installation instructions
+===============================
+
+To compile, test and install cmod, type this:
+
+	./configure	# See INSTALL for the available options.
+	make
+	make check	# This step is optional, but recommended.
+	make install
+
+You should see the string "All tests passed" when "make check"
+exists.  If not, check MACHINES to see if there is a known problem
+with your machine.  If any test fails for a reason not mentioned in
+MACHINES it is a bug; please report it.
+
+Your cmod installation is useless until you have created module files.
+You can use "make install-sample" to install a few sample module files
+in ${prefix}/cmod/modulefiles.  They are primarily useful as examples
+of how module files can look.  Don't use this target if already have
+created some module files; it will overwrite files without asking for
+confirmation.
+
+Cmod will create the following directory structure when you type "make
+install":
+
+	${prefix} # defaults to /usr/local, can be changed with --prefix
+	${prefix}/libexec # Contains the cmod binary.
+	${prefix}/etc/cmod # Contains init scripts for various shells.
+	${prefix}/etc/cmod/modulefiles # Default location for module files.
+
+See INSTALL for more information about the installation process.
+
+
+
+Getting cmod
+============
+
+The cmod home page is located at
+
+	http://www.lysator.liu.se/cmod/
+
+You can also retrieve cmod via ftp from
+
+	ftp://ftp.lysator.liu.se/pub/unix/cmod/
+
+
+
+Cmod is portable software
+=========================
+
+cmod has been tested on the systems below.  It should work on many
+more.  Only the most recent version of cmod that succeeded to compile
+on a given host is included in the data below.
+
+In short, cmod runs with the native "cc" compiler on at least these
+operating systems:
+
+	Digital Unix 4.0B
+	Dynix 3.1.1
+	FreeBSD 2.1.5
+	HP-UX 9.03, 10.20
+	Irix 4.0.5, 5.3, 6.2
+	Linux 2.0, Red Hat 4.2, 5.0
+	PowerMaxOS 4.1
+	SunOS 4.1.1_U1, 4.1.3_U1, 4.1.4
+	SysVr4
+	Ultrix 4.5
+	Unix 3.0
+
+In addition to the above, cmod runs on these operating systems once
+you install gcc on them (they don't come with a C compiler included):
+	
+	AIX 4.2
+	Solaris 2.4, 2.5.1, 2.6, 2.7
+
+It also runs when compiled with these compilers:
+
+	SparcWorks 5.1 (both c89 and cc)
+	egcs 1.0.2
+	gcc 2.6.2, 2.6.3, 2.7.2, 2.7.2.1, 2.7.2.2, 2.7.2.3, 2.8.0, 2.8.1
+
+
+
+Version 1.1
+-----------
+
+The cmod 1.1 release was tested on the following hosts.
+
+ABCenix 5.12, cc, ABC 1600 (ingrid.lysator.liu.se)
+AIX 4.2, gcc 2.7.2.2, IBM RS/6000 320 (ibrahim.lysator.liu.se)
+AIX 4.2, gcc 2.7.2.2, IBM RS/6000 950 (hal.lysator.liu.se)
+Digital Unix 4.0B, cc, DEC 3000-400 (alfons.lysator.liu.se)
+Digital Unix 4.0B, cc, DEC 3000-500 (mollgan.lysator.liu.se)
+Digital Unix 4.0B, gcc 2.8.0, DEC 3000-400 (alfons.lysator.liu.se)
+Digital Unix 4.0B, gcc 2.8.0, DEC 3000-500 (mollgan.lysator.liu.se)
+Dynix 3.1.1, cc, Sequent Symmetry S81 (i386) (burnside.lysator.liu.se)
+Dynix 3.1.1, gcc 2.7.2.2, Sequent Symmetry S81 (i386) (burnside.lysator.liu.se)
+FreeBSD 2.1.5, gcc 2.6.3, i586, (bushido.signum.se)
+HP-UX/9.03, cc, HP 9000/715 (freeone.signum.se) [1]
+HP-UX/9.03, gcc 2.7.2, HP 9000/715 (freeone.signum.se)
+HP-UX/10.20, /opt/ansic/bin/cc, HP 715/50 (hurwitz.lysator.liu.se)
+HP-UX/10.20, /usr/ccs/bin/cc, HP 715/50 (hurwitz.lysator.liu.se)
+HP-UX/10.20, gcc 2.8.1, HP 715/50 (hurwitz.lysator.liu.se)
+Irix 5.3, cc, SGI IRIS 4D35 (bastarden.lysator.liu.se)
+Irix 5.3, cc, SGI Indigo (tummelisa.lysator.liu.se)
+Irix 5.3, gcc 2.8.0, SGI IRIS 4D35 (bastarden.lysator.liu.se)
+Irix 5.3, gcc 2.8.0, SGI Indigo (tummelisa.lysator.liu.se)
+Linux 2.0, egcs 1.0.2, Power Mac 6100/66 (gravensteiner.lysator.liu.se)
+Linux 2.0, egcs 1.0.2, SPARCstation 2 (kalaspuffsexpressen.lysator.liu.se)
+Linux 2.0.35, gcc 2.6.2, i486 (gratia)
+Linux 2.0.35, gcc 2.8.1, i486 (gratia)
+Linux 2.0.27, gcc 2.7.2.1, Alpha (hurricane.signum.se)
+Linux 2.0.30, gcc 2.7.2.1, Sun ELC (grape.signum.se)
+Linux Red Hat 4.2, gcc 2.7.2, i586 (nosy.signum.se)
+Linux Red Hat 5.0, gcc 2.7.2.3, i586 (biffen.signum.se)
+Solaris 2.4, SparcWorks 5.1 c89, Sun 4/490 (tintin.lysator.liu.se)
+Solaris 2.4, SparcWorks 5.1 cc, Sun 4/490 (tiny.lysator.liu.se)
+Solaris 2.4, gcc 2.7.2.2, Sun 4/490 (tinkerbell.lysator.liu.se)
+Solaris 2.5.1, gcc 2.8.1, Axil-245 (axel.signum.se.lysator.liu.se)
+Solaris 2.6, SparcWorks 5.1 c89, Sun 4/670-401 (sara.lysator.liu.se)
+Solaris 2.6, SparcWorks 5.1 cc, Sun 4/670-401 (sally.lysator.liu.se)
+Solaris 2.6, gcc 2.8.1, Sun 4/630-411 (sandra.lysator.liu.se)
+Solaris 2.7, Sparcworks 5.1 c89, Sun SS5/70 (aeka.lysator.liu.se)
+Solaris 2.7, Sparcworks 5.1 cc, Sun SS5/70 (aeka.lysator.liu.se)
+Solaris 2.7, gcc 2.8.1, Sun SS5/70 (aeka.lysator.liu.se)
+SunOS 4.1.4, cc, Sun 4/380 (winona.rydnet.lysator.liu.se)
+Ultrix 4.5, gcc 2.7.2.2, DECsystem 5400 (delilah.lysator.liu.se)
+
+[1]  Two tests fails.  See MACHINES.
+
+
+The easiest way to make sure that a certain compiler, operating
+system, or computer brand is included on this list in the future is to
+donate the required equipment and software to Lysator.  We cannot
+promise that we will be able to port cmod to everything, but we will
+make a try.
+
+
+
+Versions 1.0.post.8 -- 1.0.post.10
+----------------------------------
+
+Very small changes were made to the C code between 1.0.post.8 and 1.1,
+so cmod 1.1 should still compile on these systems.
+
+IRIX 6.2, cc, unknown
+IRIX 6.2, gcc 2.7.2.3, unknown
+PowerMaxOS 4.1, cc, Concurrent Hawk (PowerPC)
+SunOS 4.1.3_U1, gcc 2.6.0, sun4m
+SysVr4, gcc 2.7.2.3, Motorola (m88k)
+Unix 3.0, cc, encore (m88k)
+
+
+
+Version 0.9.post.11
+-------------------
+
+This machine is currently down due to hardware problems, so cmod
+cannot be tested on it.
+
+SunOS 4.1.1_U1, gcc 2.7.2.3, Sun 3/480 (estragon.lysator.liu.se)
+SunOS 4.1.1_U1, cc, Sun 3/480 (estragon.lysator.liu.se)
+
+
+
+Version 0.9
+-----------
+
+These machines no longer exists, so newer releases of cmod cannot be
+tested on them.
+
+IRIX 4.0.5, gcc 2.7.2.2, SGI IRIS 4D20 (viggen.lysator.liu.se)
+Ultrix 4.5, gcc 2.7.2.2, VAX 6520 (prostetnic.lysator.liu.se) [1]
+
+[1]: some test cases fail since /bin/sh lacks the "echo" and "unset"
+     commands.  The 1.1 testsuite no longer relies on them.

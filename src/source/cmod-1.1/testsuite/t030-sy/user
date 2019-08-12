@@ -1,0 +1,3 @@
+#%Module
+prepend-path PATH $HOME/bin/$ARCH:$HOME/bin/sh:$HOME/sh
+prepend-path MANPATH $HOME/man

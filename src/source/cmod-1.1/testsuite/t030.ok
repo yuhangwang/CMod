@@ -1,0 +1,13 @@
+LOADEDMODULES=system:games:X11/R4:unix:local:default:user:beta:ceder;
+export LOADEDMODULES;
+PATH=/home/ceder/pfxbeta/mips-r3000-sgi-irix4.0.5/bin:/home/ceder/pfx/mips-r3000-sgi-irix4.0.5/bin:/home/ceder/common/scripts:/sw/local/bin:/bin:/usr/bin:/usr/bsd:/usr/sbin:/usr/bin/X11es:/usr/demos:/usr/demos/bin:/usr/etc:/etc;
+export PATH;
+MANPATH=/sw/local/man:/usr/man;
+export MANPATH;
+pfx=/home/ceder/pfx/mips-r3000-sgi-irix4.0.5;
+export pfx;
+INFOPATH=/home/ceder/pfxbeta/mips-r3000-sgi-irix4.0.5/info:/home/ceder/pfx/mips-r3000-sgi-irix4.0.5/info;
+export INFOPATH;
+pfxbeta=/home/ceder/pfxbeta/mips-r3000-sgi-irix4.0.5;
+export pfxbeta;
+0

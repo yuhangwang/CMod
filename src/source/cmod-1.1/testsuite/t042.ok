@@ -1,0 +1,5 @@
+LOADEDMODULES=t042-dir;
+export LOADEDMODULES;
+PATH=/043;
+export PATH;
+0

@@ -1,0 +1,4 @@
+#%Module
+module add default
+module add user
+module add beta

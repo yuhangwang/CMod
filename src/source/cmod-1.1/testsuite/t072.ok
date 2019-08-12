@@ -1,0 +1,4 @@
+reached error
+foo=setenv;
+export foo;
+1

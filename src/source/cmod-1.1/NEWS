@@ -1,0 +1,66 @@
+News in release 1.1 (release date: 1998-09-26)
+
+* Documentation added.  The Texinfo manual should now be fairly complete.
+
+* New command:
+
+	module try-add
+
+* New documented preprocessor, with the following new features:
+
+  - Shell escapes using the "$(...)" notation.
+  - Variable substitution can now handle several modifiers such as 
+    "${FOO:-bar}".
+  - Unset variables are handled in a sane and documented way.
+  - Variable expansion is now done early, so variables can be used
+    anywhere.  Even commands, such as "prepend-path", can be the
+    result of variable expansion.
+
+* New documented tokenizer.
+
+* Improved and documented error handling.  The error handling is now
+  designed, not ad-hoc.
+
+* Cmod now comes with a tiny string library that is used throughout
+  the code instead of using char-pointers.  This results in cleaner
+  code, and hopefully fewer bugs.
+
+* Several bugs fixed.
+
+
+
+News in release 1.0 (release date: 1998-02-16)
+
+* Portability vastly increased.  See README for a list of hosts where
+  cmod has been successfully compiled.  You can now compile cmod with
+  a pre-ansi-C compiler.  GNU make is no longer required.
+
+* By default, cmod now installs itself under /usr/local.  The module
+  files are located in /usr/local/etc/cmod/modulefiles.
+
+* You can now type "make install-sample" to help you set up your
+  module files for the first time.  You still need to manually define
+  the "default" module, and you probably want to manually edit the
+  module files that "make install-sample" creates.
+
+* New commands:
+
+	module avail
+	module rm	    (synonym for "module unload")
+	module --version
+	
+
+* If there is a directory X11 on $MODULEPATH, "module add X11"
+  will now attempt to load X11/default.  If X11/default is a symbolic
+  link "module avail" will indicate which module it actually refers
+  to.
+
+* Improved and documented initialization files.
+
+* Several bugs fixed.
+
+
+
+News in release 0.9 (release date: 1997-12-07)
+
+* Everything.  This is the first public release.

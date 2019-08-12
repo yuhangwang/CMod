@@ -1,0 +1,5 @@
+LOADEDMODULES=t061-1;
+export LOADEDMODULES;
+foo=\å\ä\ö;
+export foo;
+0

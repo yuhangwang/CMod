@@ -1,0 +1,8 @@
+hej
+$1)2\34(5
+$bar
+LOADEDMODULES=t060-1;
+export LOADEDMODULES;
+foo=bar;
+export foo;
+0

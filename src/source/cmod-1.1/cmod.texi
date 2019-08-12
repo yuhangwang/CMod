@@ -1,0 +1,961 @@
+\input texinfo.tex
+@c %**start of header
+@setfilename cmod.info
+@include version.texi
+@settitle cmod @value{VERSION}
+@c %**end of header
+@defcodeindex fi
+@syncodeindex fi fn
+@syncodeindex vr fn
+
+@c Decisions:
+@c
+@c  1.  Write "cmod" (or "Cmod" at the beginning of a sentence).
+@c
+@c      Rationale: Cmod is the name of the package.  It is not a
+@c      command.  (Actually, it is a command, but that command is not
+@c      visible to the user and not documented).
+@c
+@c  2.  Write "@code{module}" when referring to the alias.
+@c      
+@c      Rationale: Although @code{module} is a shell alias and not a
+@c      command, it can be used as a shell command, and should thus be
+@c      written the same way.
+
+@setchapternewpage odd
+     
+@ifinfo
+This file documents cmod, which provides modularized initialization of
+environment variables such as @code{$PATH}.
+
+Copyright (C) 1998 Per Cederqvist.
+
+Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+     
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries a copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+     
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+sections entitled ``Copying'' and ``GNU General Public License'' are
+included exactly as in the original, and provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+     
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation
+approved by the Free Software Foundation.
+
+@end ifinfo
+
+@dircategory Shells and utilities
+@direntry
+* Cmod: (cmod).                         Setting up your environment.
+* module: (cmod)Invoking module.        Modifying your environment.
+@end direntry
+
+@titlepage
+@title Cmod
+@subtitle A New Way to Set Your Path
+@subtitle Version @value{VERSION}
+
+@author Per Cederqvist
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1998 Per Cederqvist
+
+Permission is granted to make and distribute verbatim copies of this
+manual provided the copyright notice and this permission notice are
+preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided also that the
+sections entitled ``Copying'' and ``GNU General Public License'' are
+included exactly as in the original, and provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+     
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation
+approved by the Free Software Foundation.
+
+@end titlepage
+
+
+@ifinfo
+@node Top
+@top Cmod
+
+This manual documents cmod version @value{VERSION}.
+
+@menu
+* Introduction::                What is cmod good for?
+* Initializing cmod::           How to get the @code{module} alias.
+* Invoking module::             How to invoke the @code{module} alias.
+* Module files::                Writing module files.
+* Environment variables::       Environment variables used by cmod.
+* Bugs::                        Reporting bugs in cmod.
+* New releases::                How to download cmod.
+* Function index::              Function, file and variable index.
+* Concept index::               Concept index.
+@end menu
+@end ifinfo     
+
+@node Introduction
+@chapter Introduction to cmod
+@cindex cmod
+@cindex introduction
+
+So, you think that you know how to set your path?  You think that it is
+as easy as putting something like this in your @file{.bashrc} file?
+
+@example
+export PATH=/usr/local/bin:/usr/bin:/bin
+@end example
+
+This manual documents an alternative way to set your @code{PATH} (and other
+environment variables).  It may not be as simple as the above statement,
+but it is in many ways more flexible.  Cmod allows system administrators
+to provide a good default setup for users of a system, while at the same
+time allowing the users to make alterations to the environment without
+having to take on the entire burden of setting up the environment.
+
+@cindex module file
+Cmod introduces the concept of @dfn{module files}.  A module file
+can alter the environment.  For instance, the module file @file{X11}
+may add @file{/usr/X11/bin} to @code{PATH} and @file{/usr/X11/man} to
+@code{MANPATH}.  A module file can also do certain other things, such as
+load other module files--@file{default} may for instance be set up to
+load the @file{X11}, @file{unix} and @file{user} modules, which in a
+typical setup would add @file{/usr/X11/bin}, @file{/usr/bin:/bin} and
+@file{$HOME/@var{arch}/bin} to @code{PATH}.
+
+Cmod searches for module files in a list of directories, which can be
+modified by the user.  A user can for instance prepend his own directory
+of module files to the predefined list, and override module definitions
+which he doesn't like.
+
+@cindex modules, the ancestor of cmod
+@cindex credit to modules
+@cindex http://www.modules.org/
+Cmod owes a lot, such as the "module" concept and some (but not all) of
+the syntax of the @code{module} alias and module files, to
+@code{modules} (see @url{http://www.modules.org/}).  Unlike
+@code{modules}, cmod is implemented in a portable subset of C, and it is
+self contained, which makes it very easy to install.  To unpack cmod,
+compile it, and install the binaries should very seldom take more than
+five minutes, and often considerably less.  (Writing good module files
+that suit your environment is another matter.)
+
+
+@node Initializing cmod
+@chapter Initializing cmod
+
+Before you can use @code{module}, you have to install it in your
+environment.  How you do that depends on which shell you are using, and
+whether you want to have full control over your environment or trust
+your system administrator to provide a good default environment.
+
+@menu
+* Using system defaults::       Using @file{path.sh} or @file{path.csh}.
+* Defining module::             Using @file{sh.init}, @file{csh.init}@dots{}
+@end menu
+
+
+@node Using system defaults
+@section Using system defaults
+
+@fiindex path.sh
+@fiindex path.csh
+Cmod provides two files named @file{path.sh} and @file{path.csh}.  They
+are typically located in @file{/usr/local/etc/cmod/}, but the directory
+can be specified at compile-time by giving the options @samp{--prefix}
+or @samp{--sysconfdir} to @code{configure}.
+
+These files will detect which shell you are actually using, and load the
+appropriate initialization file (@pxref{Defining module}).  They will
+also load the module @samp{default}, unless some module already has been
+loaded into the environment.
+
+If you use @code{sh}, @code{bash}, @code{zsh} or @code{ksh} you should
+put this in one of your initialization files to enable cmod:
+
+@example
+. /usr/local/etc/cmod/path.sh
+@end example
+
+If you use @code{csh} or @code{tcsh}, you should put this in
+@file{.cshrc} or @file{.tcshrc}:
+
+@example
+source /usr/local/etc/cmod/path.csh
+@end example
+
+After that point, @code{PATH} will be set to the default value provided
+by your system administrator.  You can than add more modules using the
+@code{module} alias.  The following example loads the @code{sysadm}
+module.  The same syntax is used regardless of which shell you are
+using.
+
+@example
+module add sysadm
+@end example
+
+
+@node Defining module
+@section Defining module
+
+@fiindex sh.init
+@fiindex csh.init
+@fiindex bash.init
+@fiindex tcsh.init
+@fiindex zsh.init
+@fiindex ksh.init
+If you want complete control over your environment, you can source one
+of the following files instead of @file{path.sh} or @file{path.csh}:
+@example
+sh.init
+csh.init
+bash.init
+tcsh.init
+zsh.init
+ksh.init
+@end example
+
+They are installed in the same directory as @file{path.sh} and
+@file{path.csh} (@pxref{Using system defaults}).  They all define the
+@code{module} alias in a way appropriate for the shell.  They will also
+set @code{MODULEPATH}, unless it already was set.  They will not load
+any module, so your init file will have to do that by itself.
+
+
+@node Invoking module
+@chapter Invoking module
+
+Once cmod is initialized you can use it interactively or from shell
+scripts.  This chapter lists the commands that are available.
+
+@menu
+* Adding modules::              Adding modules to your environment.
+* Search path::                 Altering the cmod search path.
+* Displaying information::      Displaying loaded and available modules.
+@end menu
+
+
+@node Adding modules
+@section Adding modules
+
+@findex add
+@findex try-add
+@findex rm
+@findex load
+@findex unload
+@findex module add
+@findex module try-add
+@findex module rm
+@findex module load
+@findex module unload
+@cindex loading a module
+@cindex unloading a module
+@cindex module, loading
+@cindex module, unloading
+@cindex adding a module
+@cindex removing a module
+@example
+module add @samp{module}...
+module try-add @samp{module}...
+module rm @samp{module}...
+module load @samp{module}...
+module unload @samp{module}...
+@end example
+
+You can use @code{module add} to add one or more modules to your
+environment.  The command will fail if the module cannot be found.  You
+can add several modules with the same command.  @code{module load} is an
+alias for @code{module add}.
+
+If you want to load a module if it is available, use @code{module
+try-add}.  It will silently ignore any attempt to load a module that
+doesn't exist.  It can be handy to add @code{module try-add spice} to
+your @file{.bashrc} file to add the @samp{spice} module whenever it is
+present, but avoid complaints on systems where it doesn't exist.
+
+Use @samp{module rm} to remove a module from your environment.  This
+will parse the module file and do the opposite of what is said there.
+For example, if the module file adds @file{/usr/local/bin} to your
+@code{PATH} this command will remove @file{/usr/local/bin} from
+@code{PATH}.  An attempt to remove a module that isn't present in your
+environment will result in a warning message.  Depending on how the
+module file is written it may sometimes be impossible to unload it.
+This command does its best, but that is sometimes not enough.
+
+@samp{module unload} is an alias for @code{module rm}.
+
+
+@node Search path
+@section Altering where modules are found
+
+@findex use
+@findex unuse
+@findex module use
+@findex module unuse
+@cindex search path, altering
+@cindex module search path, altering
+@cindex altering the module search path
+@cindex using a module directory
+@cindex unusing a module directory
+@cindex adding a directory to the search path
+@cindex removing a directory from the search path
+@vindex MODULEPATH@r{, altering with} module use
+@example
+module use @samp{dir}
+module unuse @samp{dir}
+@end example
+
+@code{module use} will prepend @samp{dir} to the list of directories
+that are searched for module files.  When writing a module file this is
+equivalent to @samp{prepend-path MODULEPATH @samp{dir}}.
+
+@code{module unuse} will remove @samp{dir} from the list.  When writing
+a module file the same effect can be achieved with @samp{delete-path
+MODULEPATH @samp{dir}}.
+
+
+@node Displaying information
+@section Displaying information to the user
+
+@findex list
+@findex avail
+@findex --version
+@findex --help
+@findex module list
+@findex module avail
+@findex module --version
+@findex module --help
+@cindex list loaded modules
+@cindex display loaded modules
+@cindex loaded modules, listing
+@cindex active modules, listing
+@cindex modules, list loaded
+@cindex list available modules
+@cindex available module, listing
+@cindex module, list available
+@cindex version number, displaying
+@cindex display cmod version number
+@cindex cmod version number, displaying
+@cindex help
+@cindex display help
+@cindex usage message
+@example
+module list
+module avail
+module --version
+module --help
+@end example
+
+These commands display information to the user.  The format of the
+output is designed so that it should be easy to read for a human.
+Programs should not attempt to parse the output, since it may change
+even in bug-fix releases of cmod.
+
+@vindex LOADEDMODULES@r{, used by} module list
+@samp{module list} lists the modules that are currently loaded.  The
+environment variable @code{LOADEDMODULES} also contains this
+information.
+
+@vindex MODULEPATH@r{, affects} module avail
+@samp{module avail} traverses all the directories in the current module
+load path (which is held in @code{MODULEPATH}) and prints all the
+modules that are available.  Modules that are loaded are preceded by a
+plus sign, others by a minus sign.  This makes it easy to see at a
+glance if there are some exiting new modules that you may wish to add to
+your environment.
+
+@samp{module --version} outputs the version number of cmod.
+@samp{module --help} prints a few lines of help for the commands that
+can be used interactively.
+
+
+@node Module files
+@chapter Writing module files
+
+@cindex module file, writing
+@findex modulefiles
+A module is defined in a @dfn{module file}.  The module files are
+typically installed in @file{/usr/local/etc/cmod/modulefiles}, but the
+directory can be specified at compile-time by giving the options
+@samp{--prefix} or @samp{--sysconfdir} to @code{configure}, or by
+specifying @samp{moduledir=@var{location}} to @code{make} and @code{make
+install}.
+
+@menu
+* Module syntax::               Syntax of module files.
+* Directories::                 Using directories as module files.
+* Altering the environment::    Commands that alter the environment.
+@end menu
+
+
+@node Module syntax
+@section Syntax of module files.
+@cindex syntax of module files
+@cindex passes
+@cindex module file parsing
+@cindex parsing module files
+
+The parsing is performed by three major components:
+
+@itemize @bullet
+@item 
+The @dfn{preprocessor} performs variable lookup and shell escapes.
+
+@item
+The @dfn{tokenizer} receives a stream of characters from the
+preprocessor.  It splits them into tokens, gather tokens until the end
+of line, and feeds each line to the evaluator.  The tokenizer is also
+responsible for comment removal.
+
+@item
+The @dfn{evaluator} receives one command at a time from the tokenizer.
+It evaluates the command.
+@end itemize
+
+It is important to note that both the preprocessor and the tokenizer are
+lazy; they always do as little as possible.  Whenever possible, a line
+is evaluated by the evaluator before the next line is even parsed.  That
+way, variable assignments made on one line can affect the preprocessor
+directives on the next line.
+
+@menu
+* Preprocessor::                The preprocessor.
+* Tokenizer::                   The tokenizer.
+* Evaluator::                   The evaluator.
+@end menu
+
+
+@node Preprocessor
+@subsection The preprocessor
+@cindex preprocessor
+
+@display
+@flushright
+Well I'm not sure
+what I'm looking for
+--- Garbage
+@end flushright
+@end display
+
+The preprocessor looks for @samp{$} signs.  All other characters are passed
+unmodified to the tokenizer.
+
+@table @samp
+@cindex quoting dollar signs
+@cindex dollar sign, quoting
+@cindex $, quoting
+@item $$
+Pass a literal @samp{$} sign to the tokenizer.
+
+@item $@{@var{var}@}
+Variable expansion.  See below.
+
+@item $(@var{shellscript})
+@cindex shell escape
+@cindex shellscript
+Evaluate @var{shellscript} in a subshell, and pass whatever the shell
+script generates on stdout to the tokenizer.  The output is not examined
+by the preprocessor.
+
+If the shellscript exits with a non-zero exit status the module will be
+aborted.  (You can easily circumvent this restriction by appending
+@samp{; true} to the end of the shell script.)
+
+@var{shellscript} may contain any character, including newline.  While
+scanning for the terminating close-parenthesis @samp{)} the following
+actions are performed, in order:
+
+@cindex backslash substitution in shell escape
+@table @samp
+@cindex dollar, quoting in shell escape
+@cindex $, quoting in shell escape
+@item \$
+Replaced by a dollar sign @samp{$}.
+
+@item \)
+Replaced by a right-parenthesis @samp{)}.
+
+@cindex backslash, quoting in shell escape
+@cindex \, quoting in shell escape
+@item \\
+Replaced by a single backslash @samp{\}.
+
+@item \ newline
+A backslash followed by a newline is removed.
+
+@item \(
+Replaced by a left-parenthesis @samp{(}.  This is not really necessary,
+but this way, at least there is symmetry.
+
+@item \ @var{c}
+A backslash followed by any other character is an error.
+
+@item $@{@var{var}@}
+Variable expansion.  See below.
+
+@item $ @var{c}
+A dollar sign followed by any other character is an error, and will
+cause the module to be aborted.
+
+@end table
+
+The resulting string is passed to @code{/bin/sh -c @var{string}} for
+evaluation.  If the result contains a trailing newline it will be
+removed.
+
+@item $ @var{c}
+A dollar sign followed by any other character is an error, and will
+cause the module to be aborted.
+@end table
+
+@subsubsection Variable expansion
+@cindex variable expansion
+@cindex accessing variables in module files
+@cindex environment variables, accessing
+Variable expansion is modeled after the constructs found in
+@file{/bin/sh}, but since the variable expansion is performed by cmod
+the same syntax is used even if you are using @code{csh}.
+
+@table @samp
+@item $@{@var{var}@}
+This is the simplest form.  It expands to the value of the environment
+variable @var{var}.  (The value may be affected by commands that have
+been evaluated on previous lines.)  The variable name @var{var} cannot
+contain newlines or any of these characters: @samp{@{:-=?+}.  The value
+of the variable may contain any character, and it isn't examined by the
+preprocessor, but passed straight to the tokenizer (or used as a shell
+command if the variable was used inside a shellscript construct).
+
+The module will be aborted if the environment variable was unset.
+
+@item $@{@var{var}:-@samp{string}@}
+If the environment variable @var{var} is unset or empty, @samp{string}
+is recursively sent through the preprocessor and the result is used
+instead of @var{var}.  Otherwise, the value of the environment variable
+@var{var} is used.
+
+@item $@{@var{var}-@samp{string}@}
+Similar to @samp{:-}, but test if @var{var} is unset instead of testing
+if it is unset or empty.
+
+@item $@{@var{var}:=@samp{string}@}
+Similar to @samp{:-}, but if @samp{string} is used it is also assigned
+to @var{var}.
+
+@item $@{@var{var}=@samp{string}@}
+Similar to @samp{:=}, but test if @var{var} is unset instead of testing
+if it is unset or empty.
+
+@item $@{@var{var}:+@samp{string}@}
+If the environment variable @var{var} is unset or empty this expands to
+the empty string.  Otherwise, @samp{string} is recursively sent through
+the preprocessor and the result is used.
+
+@item $@{@var{var}+@samp{string}@}
+Similar to @samp{:+}, but test if @var{var} is unset instead of testing
+if it is unset or empty.
+
+@item $@{@var{var}:?@samp{string}@}
+If the environment variable @var{var} is unset or empty @samp{string} is
+recursively sent through the preprocessor, the result is printed to
+stderr, and this module is aborted.  Otherwise, the value of the
+environment variable @var{var} is used.
+
+@item $@{@var{var}?@samp{string}@}
+Similar to @samp{:?}, but test if @var{var} is unset instead of testing
+if it is unset or empty.
+
+@end table
+
+
+@node Tokenizer
+@subsection The tokenizer
+@cindex tokenizer
+
+The tokenizer is responsible for creating tokens from the character
+stream it receives from the preprocessor.
+
+@table @samp
+@item \ newline
+Each occurrence of a backslash character \ followed by a newline is
+deleted.
+
+@item " string "
+@cindex quoted string
+@cindex backslash substitution
+A string within quotes @samp{"} is a token.  Any character, including
+newlines, may be present in the string.  The following backslash
+substitutions are performed within the string:
+
+@table @samp
+@item \"
+Replaced by a quote.
+
+@item \#
+Replaced by a hashmark.
+
+@item \n
+Replaced by a newline.
+
+@item \ space
+Replaced by a space.
+
+@cindex octal digits
+@cindex special characters
+@item \ @var{ddd}
+@var{ddd} are three octal digits.  Replaced by the character they
+represent.
+
+@item \\
+Replaced by a single backslash.
+
+@item \ @var{c}
+A backslash followed by any other character is an error.
+
+@end table
+
+@item token
+@cindex token
+A token is a sequence of any character except space, newline, tab, quote
+@samp{"} or hash-mark @samp{#}.  The same backslash substitutions are
+performed within a token as within a string.  (Thus, even the forbidden
+characters may be inserted into a token.)
+
+@item # comment newline
+@cindex comment
+Text from a hash through the end of the line is ignored as a comment.
+
+@item horizontal whitespace
+One or more horizontal whitespace character separates tokens.  Space and
+tab are the only two characters that count as horizontal whitespace.
+
+@item newline
+The newline character separates lines.  As soon as the tokenizer
+receives a complete line the tokens on the line will be passed to the
+evaluator for evaluation.  (Note that leading and trailing horizontal
+whitespace on a line is ignored.)
+
+@end table
+
+
+@node Evaluator
+@subsection The evaluator
+@cindex evaluator
+
+The evaluator recognizes tokens, and evaluates them.  For instance, if
+the first token is @samp{prepend-path} the evaluator expects two more
+tokens: @var{variable} and @var{value}.
+
+@cindex error handling
+@cindex abort
+@cindex module, abort loading of
+If a command fails the module is aborted.  That means that the parsing
+of the file stops, and the effects on the environment produced by any
+command that had already been evaluated in this module file will be
+undone.  Side effects (such as the output produced by @samp{module
+--version}) can of course not be undone.
+
+All cmod commands that can be used from the shell (such as @samp{module
+add sysadm}) can also be used in module files.  @xref{Invoking module}.
+In addition to those there are a few extra commands that alter the
+environment; @pxref{Altering the environment}.
+
+
+@node Directories
+@section Using directories as module files
+@cindex directory, using as module files
+@cindex default module of subdirectory
+@cindex versioned modules
+
+All files in the directories on the module search path can be used as
+modules.  You can also have directories that in turn contains module
+files.  This feature can be used to provide several versions of a
+module.
+
+Say that your site has tree versions of Emacs installed: Emacs 19.30 in
+@file{/sw/emacs-19.30}, Emacs 19.34 in @file{/sw/emacs-19.34} and Emacs
+20.3 in @file{/sw/emacs-20.3}.  You could provide three modules named
+@samp{emacs-19.30}, @samp{emacs-19.34} and @samp{emacs-20.3} to handle
+the situation.
+
+An alternative way would be to create the directory @file{emacs} and
+populate it with three module files @file{19.30}, @file{19.34} and
+@samp{20.3}.  You can then use @samp{emacs/19.34} as a module name.
+
+@fiindex default
+If you create a file named @file{default} in the @file{emacs} directory,
+any attempt to load the module @samp{emacs} will actually load
+@samp{emacs/default}.  By putting the line @code{module add emacs/19.34}
+in @file{emacs/default} you can provide a default version; in that way
+users that want a specific version of emacs can load that module file,
+while other users can rely on the administrator to provide a stable
+version of Emacs.
+
+@cindex symbolic links
+On systems that support symbolic links the file @file{emacs/default} can
+be a symbolic link to the appropriate file to load.  Cmod understands
+the symbolic link and will make the output of @code{module avail} look
+nicer if the @samp{default} module in a subdirectory is a symbolic link.
+
+
+@node Altering the environment
+@section Altering the environment
+
+There are several commands that can alter the value of environment
+variables in different ways.
+
+@cindex fragment
+@cindex : used as fragment separator
+@cindex colon-separated lists
+@cindex path separator
+@code{append-path}, @code{prepend-path} and @code{remove-path} treats
+the value as a colon-separated list of fragments.  This convention is
+often used; @code{MANPATH} is for instance a colon-separated list of
+directories that the command @code{man} should look in when it searches
+for man pages.
+
+@menu
+* append-path::                 Appending a directory to a path.
+* prepend-path::                Prepending a directory to a path.
+* remove-path::                 Removing a directory from a path.
+* setenv::                      Setting a variable to a fixed value.
+* unsetenv::                    Unsetting a variable.
+@end menu
+
+
+@node append-path
+@subsection append-path: Appending a directory to a path
+
+@cindex appending a fragment to a path
+@cindex path, appending to
+@cindex fragment, appending
+@cindex component, appending
+@findex append-path
+@example
+append-path @samp{var} @samp{path}
+@end example
+
+This command appends @samp{path} to the tail of @var{var}.  If @var{var}
+already contained @samp{path} it will be left unmodified.
+
+
+@node prepend-path
+@subsection prepend-path: Prepending a directory to a path
+
+@cindex prepending a fragment to a path
+@cindex path, prepending to
+@cindex fragment, prepending
+@cindex component, prepending
+@findex prepend-path
+@example
+prepend-path @samp{var} @samp{path}
+@end example
+
+This command prepends @samp{path} to the tail of @var{var}.  If @var{var}
+already contained @samp{path} the old occurance will be removed, so the
+net result is that the @samp{path} component is moved to the front of
+@var{var}.
+
+
+@node remove-path
+@subsection prepend-path: Removing a directory from a path
+
+@cindex removing a fragment to a path
+@cindex path, removing parts of
+@cindex fragment, removing
+@cindex component, removing
+@findex remove-path
+@example
+remove-path @samp{var} @samp{path}
+@end example
+
+This command removes all occurances of @samp{path} from @var{var}.
+Nothing happens if @var{var} does not contain @samp{path}.
+
+
+@node setenv
+@subsection setenv: Setting a variable to a fixed value
+
+@cindex setting an environment variable
+@cindex variables, setting
+@cindex environment variable, setting an
+@findex setenv
+@example
+setenv @samp{var} @samp{value}
+@end example
+
+Set environment variable @var{var} to @samp{value}.
+
+
+@node unsetenv
+@subsection unsetenv: Clearing a variable
+
+@cindex unsetting an environment variable
+@cindex clearing an environment variable
+@cindex variables, unsetting
+@cindex environment variable, unsetting an
+@findex unsetenv
+@example
+unsetenv @samp{var}
+@end example
+
+Unset the environment variable @var{var}.
+
+
+@node Environment variables
+@chapter Environment variables used by cmod
+
+Cmod can be used to modify all environment variables.  This is a list of
+the environment variables that cmod itself uses.
+
+@table @code
+@item MODULEPATH
+@vindex MODULEPATH@r{, definition}
+A colon-separated list of directories that should be searched for
+modules.  You can use @code{module use} and @code{module unuse} to
+modify this variable.
+
+@item LOADEDMODULES
+@vindex LOADEDMODULES@r{, definition}
+A colon-separated list of loaded modules.
+@end table
+
+
+@node Bugs
+@chapter Reporting bugs
+@cindex reporting bugs
+@cindex bugs, reporting
+
+@display
+@flushright
+When I grow up
+I'll be stable
+--- Garbage
+@end flushright
+@end display
+
+Bugs can be reported to ceder@@lysator.liu.se or via the LysLysKOM
+conference "cmod (-) modules gjort 
+@ifinfo
+rätt".
+@end ifinfo
+@iftex
+r@"a{}tt".
+@end iftex
+
+Ideally, a bug report should provide:
+
+@itemize @bullet
+@item
+A short description of the bug: how it can be reproduced, what behavior
+you expected, and what happened instead.
+
+@item
+A test case of the same type as can be found in the @file{testsuite}
+directory in the cmod distribution that demonstrates the bug.
+
+@item
+A patch that fixes the bug.
+
+@item
+Written and PGP-signed permission to release the code under GNU General
+Public License version 2 or later.
+
+@end itemize
+
+You don't have to provide all of the above to report a bug, however.
+If there is a problem with cmod I want to know about it so that it can
+be fixed.
+
+
+@node New releases
+@chapter New releases
+@cindex new releases
+@cindex home page for cmod
+@cindex cmod home page
+@cindex web address to cmod
+@cindex email address to cmod
+@cindex getting in touch
+@cindex feedback
+@cindex LysKOM
+@cindex http://www.lysator.liu.se/~ceder/cmod/
+@cindex announcements of new releases
+
+@display
+@flushright
+I'm waiting,
+I'm waiting,
+for You.
+--- Garbage
+@end flushright
+@end display
+
+@url{http://www.lysator.liu.se/~ceder/cmod/} contains the cmod home
+page.  New releases of cmod are announced there.  They are also
+announced in the LysLysKOM conference "cmod (-) modules gjort
+@ifinfo
+rätt".
+@end ifinfo
+@iftex
+r@"a{}tt".
+@end iftex
+
+@cindex version numbers
+@cindex snapshot releases
+@cindex stable releases
+@cindex bug-fix releases
+@cindex releases, different kinds of
+There are two kind of cmod releases: regular releases and snapshot
+releases.  A regular releases has received a fair amount of testing, and
+the documentation and supplementary files such as @file{NEWS} and
+@file{README} should be up to date.  They are believed to be stable, and
+all known bugs are documented when they are made.  The version number
+for a regular release consists of two decimal numbers separated by a
+point.  Example: 1.0.
+
+Snapshot releases, on the other hand, are made whenever there has been
+some significant development on cmod.  They receive minimal testing, at
+best, and the only file you can count on to be up-to-date in them is
+@file{ChangeLog}.  If you want to be on the cutting edge of cmod
+development you should use snapshot releases, but otherwise you are
+better of sticking to the regular releases.
+
+The name of a snapshot release is based on the previous regular
+release, with an appended @samp{.post.@var{N}}, where @var{N} is a
+sequence number.  So, for example, the third snapshot release after
+cmod version 1.0 was named 1.0.post.3.
+
+In the future, there may also be a third kind of release: bug fix
+releases.  If 1.0 should contain a serious enough error I might release
+a fix.  Bug fix releases are as stable as regular releases.  They have
+version numbers such as 1.0.1.
+
+
+@node Function index
+@unnumbered Function, file and variable index
+     
+@printindex fn
+     
+@node Concept index
+@unnumbered Concept index
+     
+@printindex cp
+     
+@contents
+@bye

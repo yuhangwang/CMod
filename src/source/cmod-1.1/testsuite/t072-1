@@ -1,0 +1,3 @@
+prepend-path foo ${foo-err${empty:?unreached error}}2
+prepend-path foo ${empty-err${empty:?also unreached}}3
+prepend-path foo ${unset-err${empty:?reached error}}4

@@ -1,0 +1,4 @@
+setenv LOADEDMODULES t039-1;
+setenv BAR ;
+setenv XYZZY ;
+0

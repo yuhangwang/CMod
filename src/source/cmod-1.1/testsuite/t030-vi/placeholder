@@ -1,0 +1,3 @@
+This file exists here only because automake creates distributions with
+the -o flag to tar, which as a side effect apparently causes tar to
+ignore empty directories.

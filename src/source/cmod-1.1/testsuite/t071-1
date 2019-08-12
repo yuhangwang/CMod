@@ -1,0 +1,2 @@
+${foo:-$(echo one >&2)}${empty:-$(echo two >&2)}${empty-$(echo three >&2)} \
+${unset:-$(echo four >&2)}${unset-$(echo five >&2)}x y

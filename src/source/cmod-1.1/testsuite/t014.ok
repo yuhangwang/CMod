@@ -1,0 +1,3 @@
+setenv LOADEDMODULES t009-1:t010-1;
+setenv PATH /usr/ccs/bin:/usr/ucb/bin;
+0

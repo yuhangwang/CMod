@@ -1,0 +1,5 @@
+#%Module
+prepend-path PATH ${HOME}/common/scripts
+setenv pfx ${HOME}/pfx/${CEDER_ARCH}
+prepend-path PATH ${pfx}/bin
+prepend-path INFOPATH ${pfx}/info

@@ -1,0 +1,5 @@
+LOADEDMODULES=t002-1:t006-1:t019-1;
+export LOADEDMODULES;
+PATH=/usr/bin:/usr/local/bin:/usr/cmod/bin:/usr/ucb/bin;
+export PATH;
+0

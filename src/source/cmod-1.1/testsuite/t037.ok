@@ -1,0 +1,7 @@
+LOADEDMODULES=t037-1;
+export LOADEDMODULES;
+BAR=/dev/;
+export BAR;
+XYZZY=/dev/;
+export XYZZY;
+0

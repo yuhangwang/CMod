@@ -1,0 +1,5 @@
+LOADEDMODULES=t024-1;
+export LOADEDMODULES;
+FOO=foo:/x/y/z:bar:/a;
+export FOO;
+0

@@ -1,0 +1,6 @@
+setenv foo bar
+setenv fie path
+$(echo one >&2; echo prepend-$(echo two >&2; echo ${foo:+$(echo \$fie)}) \
+PREPENDED \
+${xyzzy-/usr/cross-bin}:${xyz=/usr/local/bin})
+prepend-path NEXT ${xyz=/sw/local/bin}

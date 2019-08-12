@@ -1,0 +1,3 @@
+@MODULEPATH@/t049-1:3: syntax error: too many arguments
+  Offending line: setenv foo bar gazonk
+1

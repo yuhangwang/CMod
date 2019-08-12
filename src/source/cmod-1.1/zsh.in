@@ -1,0 +1,9 @@
+module() {
+	eval `@CMOD@ sh $*` 
+}
+
+if [ "$MODULEPATH" = "" ]
+then
+	MODULEPATH=@MODULEPATH@
+	export MODULEPATH
+fi

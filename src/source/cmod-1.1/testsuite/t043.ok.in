@@ -1,0 +1,2 @@
+../cmod: @MODULEPATH@/. lacks @MODULEPATH@/./default
+1

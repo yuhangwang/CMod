@@ -1,0 +1,2 @@
+prepend-path BAR /dev/${FOO}
+prepend-path XYZZY /dev/${FOO}

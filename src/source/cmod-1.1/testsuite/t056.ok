@@ -1,0 +1,5 @@
+LOADEDMODULES=t002-1;
+export LOADEDMODULES;
+PATH=/usr/cmod/bin:/foo::/bar;
+export PATH;
+0

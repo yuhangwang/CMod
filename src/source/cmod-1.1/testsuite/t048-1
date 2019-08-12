@@ -1,0 +1,4 @@
+setenv PATH /bin:/usr/bin
+setenv kalle pelle
+$(echo faked error >&2 ; echo msg line two >&2 ; exit 1)
+setenv sune stine

@@ -1,0 +1,189 @@
+#!/bin/sh
+#  cmod - set up the user environment with module files.
+#  Copyright (C) 1997, 1998 by the authors of cmod (see AUTHORS).
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+
+cd $1
+
+create_module() {
+    # $1 module name
+    # $2 variable
+    # $3 path
+    # $4 variable
+    # $5 path
+    # ...
+
+    mname=$1
+    if [ -f $mname ]
+    then
+	mname=$mname.sample
+    fi
+
+    shift
+    while test $# -gt 1
+    do
+	mvar=$1
+	mpath=$2
+	shift 2
+
+	(oifs="$IFS"
+	IFS=:
+	set $mpath
+	IFS="$oifs"
+	mpath=
+	sep=
+	while test $# -gt 0
+	do
+	    if [ -d $1 ]
+	    then
+		mpath=$mpath$sep$1
+		sep=:
+	    else
+		echo $mname: skipping $1 for $mvar >&2
+	    fi
+	    shift
+	done
+	if [ -n "$mpath" ]
+	then
+	    echo prepend-path $mvar $mpath
+	else
+	    echo $mname: not setting $mvar >&2
+	fi ) >> $mname
+    done
+}
+
+create_module local \
+PATH /sw/local/bin:/opt/local/bin:/usr/local/bin \
+MANPATH /sw/local/man:/opt/local/bin:/usr/local/bin \
+INFOPATH /sw/local/info:/opt/local/info:/usr/local/info:/sw/common/info
+
+cat <<EOF >> local
+module add emacs
+EOF
+
+create_module aCC \
+PATH /opt/aCC/bin \
+MANPATH /opt/aCC/share/man
+
+create_module ccs \
+PATH /usr/ccs/bin \
+MANPATH /usr/ccs/man
+
+create_module bsd \
+PATH /usr/ucb:/usr/bsd:/usr/bsd/bin
+
+create_module cde \
+PATH /usr/dt/bin \
+MANPATH /usr/dt/man
+
+create_module cfengine \
+PATH /sw/cfengine/sbin
+
+cat <<EOF >> cfengine
+setenv CFINPUTS /sw/wheel/cfengine
+EOF
+
+
+create_module emacs \
+INFOPATH /sw/common/share/emacs/19.34/info:\
+/sw/local/share/emacs/19.34/info:\
+/sw/common/share/emacs/site-info:\
+/sw/local/share/emacs/site-info:\
+/usr/local/share/emacs/19.34/info:\
+/usr/local/share/emacs/site-info:\
+/usr/share/emacs/19.34/info:\
+/usr/share/emacs/site-info
+
+create_module games \
+PATH /sw/games/bin:/usr/local/games/bin:/usr/games/bin:/usr/games \
+MANPATH /sw/games/man:/usr/local/games/man
+
+create_module gnu \
+PATH /usr/gnu/bin:/usr/local/gnu/bin:/opt/gnu/bin \
+MANPATH /usr/gnu/man:/usr/local/gnu/man:/opt/gnu/man \
+INFOPATH /usr/gnu/info:/usr/local/gnu/info:/opt/gnu/info
+
+create_module kom++ \
+PATH /sw/kom++/bin
+
+create_module mh \
+PATH /sw/mh/bin \
+MANPATH /sw/mh/man
+
+create_module mgr \
+PATH /usr/mgr/bin \
+MANPATH /usr/mgr/man
+
+create_module openwin \
+PATH /usr/openwin/bin:/usr/openwin/demo:/usr/openwin/bin/xview \
+MANPATH /usr/openwin/man
+
+cat <<EOF >> openwin
+setenv  OPENWINHOME     /usr/openwin
+setenv  XFILESEARCHPATH /usr/openwin/lib/locale/%L/%T/%N%S:/usr/openwin/lib/%T/%N%S
+EOF
+
+create_module pbm \
+PATH /sw/pbm/bin:/opt/pbm/bin:/usr/local/pbm/bin:\
+/opt/netpbm/bin:/usr/local/netpbm/bin \
+MANPATH /sw/pbm/man:/opt/pbm/man:/opt/local/pbm/man:\
+/opt/netpbm/man:/usr/local/netpbm/man
+
+create_module pilot \
+PATH /sw/pilot/bin \
+MANPATH /sw/pilot/man
+
+cat <<EOF >> pilot
+setenv PILOTRATE 38400
+setenv PILOTPORT /dev/term/a
+EOF
+
+create_module postgres \
+PATH /usr/local/postgres/bin
+
+create_module sparcworks \
+PATH /sw/sparcworks/5.1/SUNWspro/bin \
+MANPATH /sw/sparcworks/5.1/SUNWspro/man
+
+create_module tex \
+PATH /sw/tex/teTeX/bin/sparc-solaris2.5.1:/usr/TeX/bin:/opt/TeX/bin:\
+/usr/local/tex/bin \
+MANPATH /sw/tex/teTeX/man \
+INFOPATH /sw/tex/teTeX/info
+
+create_module unix \
+PATH /bin:/usr/bin \
+MANPATH /usr/share/catman:/usr/share/man:/usr/catman:/usr/man
+
+create_module user
+
+cat <<'E'OF >> user
+setenv ARCH sparc
+prepend-path PATH ${HOME}/bin/${ARCH}:${HOME}/bin/sh:${HOME}/common/scripts
+prepend-path MANPATH ${HOME}/man
+EOF
+
+create_module sysadm \
+PATH /sbin:/usr/sbin:/etc:/usr/etc
+
+create_module wheel \
+PATH /sw/wheel/bin:/sw/wheel/sbin \
+MANPATH /sw/wheel/man
+
+create_module X11 \
+PATH /usr/contrib/bin/X11:/usr/bin/X11:/opt/imake/bin:/sw/X11R6.3/bin\
+:/usr/X11/bin:/usr/X11/R5/bin \
+MANPATH /sw/X11R6.3/man

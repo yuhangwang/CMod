@@ -1,0 +1,1991 @@
+Sun Sep 27 00:18:43 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* cmod 1.1 released.
+
+	Renamed files to avoid file-lenght problems on hosts such as ABC
+	1600 which can only handle 14 characters, and where ansi2knr is
+	used and adds one additional character.
+	* Makefile.am (cmod_SOURCES): Renamed cmod_preproc.c to cmod_pp.c
+	and cmod_process.c to cmod_proc.c.
+	* cmod_pp.c: New name for former cmod_preproc.c.
+	* cmod_proc.c: New name for former cmod_process.c.
+	
+	Work around an automake problem.
+	* memmove.c (memmove): Use old-style function header since
+	the automake support for ansi2knr currently isn't invoked properly
+	for AC_REPLACE_FUNCS.
+	* getcwd.c (getcwd): Likewise.
+
+	Provide a replacement for memmove (needed on ABCenix).
+	* memmove.c (memmove): New file.
+	* configure.in: Use AC_REPLACE_FUNCS(memmove) instead of
+	AC_CHECK_FUNCS(memmove).
+	* archaic.h (memmove): Removed the attempt to implement memmove in
+	terms of bcopy.  There is no bcopy in ABCenix.
+
+	Provide a replacement for getcwd (needed on ABCenix).
+	* getcwd.c (getcwd): New file.
+	* configure.in: Moved the check for -lposix before the closedir
+ 	check.  Use AC_REPLACE_FUNCS(getcwd) if neither getcwd nor getwd
+ 	is found.  Define PWD_PATH if getcwd is replaced.
+	* cmod.c: Test HAVE_GETWD instead of HAVE_GETCWD so that the
+	replacement logic works correctly.
+	(canonicalize_path): Fixed a bug that caused the return value from
+	getcwd to be ignored in some cases.
+	* acconfig.h (PWD_PATH): New define.
+
+	Fixed a bogus return type.
+	* cmod_token.c (next_char): The returned value is enum
+	cmod_status, not int.
+
+	Port to ABC 1600.
+	* cmod_process.c: Include "archaic.h".
+	* testsuite/clean-sh.c: Include <sys/types.h> since <unistd.h>
+	requires it on ABC 1600.
+	* configure.in: Use CMOD_HEADER_PARAM.
+	* cmod.c: Moved include statements around a bit for ABC1600
+ 	compatibility.  Check SYS_TYPES_WIH_SYS_PARAM.
+	* acinclude.m4 (CMOD_HEADER_PARAM): New macro.
+	* acconfig.h (HAVE_ERRNO_IN_ERRNO_H): Default to undefined.
+	(SYS_TYPES_WITH_SYS_PARAM): New define.
+
+Sat Sep 26 18:23:54 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Release management.
+	* configure.in: Release 1.1.
+	* NEWS: Fill in the release date for the 1.1 release.
+	* TODO: No high priority things remain.
+	* RELEASING: Mention README.  Update the version numbers.  The
+ 	location of the web page is being changed.
+	* README.DEVO: Updated for the 1.1 release.
+	* README: Updated/rewritten for the 1.1 release.
+	* MACHINES (Sequent Symmetry): Entry removed.  No special
+	treatment is necessary now.
+	(HP/UX 9.03 with the bundled cc): Some tests fail.
+	* AUTHORS: Mention that this code is released under GPL.
+
+	Documentation fixes.
+	* cmod.texi (Introduction): Don't use @url inside @cindex since
+	TeX barfs on it.
+	(New releases): Likewise.
+	
+	Added some support for the automatic test compilation effort.
+	* Makefile.am (identify): New target.
+
+Sun Sep 20 17:52:02 1998  Per Cederqvist  <ceder@gratia>
+
+	Spelling errors fixed.
+	* cmod.texi (Displaying information): Spelling error fixed.
+	(Bugs): TeX error fixed.
+	(New releases): Spelling errors fixed.
+
+	Added index entries to the documentation.
+	* cmod.texi: Added index entries.
+	(Adding modules): New name for former node "add".
+	(Search path): New name for former node "use".
+	(Displaying information): New name for former node "list".
+	(Module syntax): Removed an obsolete note that stated that the
+	documented behavior was not yet implemented.
+	(Function index): New node.
+	* Makefile.am (index-check): New target.
+
+	Code cleanup.
+	* env.h: Updated a comment.
+
+	Check line numbers in error messages.
+	* cmod_preproc.c (dollar): Improve an error message.
+	* testsuite/t073-1: Test error message for an unterminated construct.
+	* testsuite/t073.ok.in: Likewise.
+	* testsuite/t073.sh: Likewise.
+	* testsuite/t074-1: Likewise.
+	* testsuite/t074.ok.in: Likewise.
+	* testsuite/t074.sh: Likewise.
+	* testsuite/t075-1: Likewise.
+	* testsuite/t075.ok.in: Likewise.
+	* testsuite/t075.sh: Likewise.
+	* testsuite/t076-1: Likewise.
+	* testsuite/t076.ok.in: Likewise.
+	* testsuite/t076.sh: Likewise.
+
+Sun Sep 20 11:49:35 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Give credit for detection of the m88k/encore/Unix 3.0 problem.
+	* THANKS: Added Joakim Karlsson.
+
+	* configure.in: Snapshot 1.0.post.8.
+
+	* MACHINES: Sequent Symmetry section updated.  Removed the FreeBSD
+	2.1.5 with gcc 2.6.3 section, since cmod should work OK there now.
+
+Sun Sep 20 11:31:47 1998  Per Cederqvist  <ceder@gratia>
+
+	Port to m88k/encore/Unix 3.0.
+	* configure.in: Check if the compiler understands "static inline";
+	all code should now use "static_inline" instead of "static inline".
+	* acconfig.h (static_inline): New define.
+	* cmod_preproc.c (variable): Use "static_inline" instead of
+	"static inline".
+	(script_backslash): Likewise.
+	(script): Likewise.
+	* cmod_token.c (next_char): Likewise.
+
+Sat Sep 19 12:43:29 1998  Per Cederqvist  <ceder@gratia>
+
+	Port to gcc 2.6.3.
+	* configure.in: Check that "__attribute__((unused))" is understood
+	in a parameter-declaration of a function declarator.
+
+Thu Sep 17 23:52:23 1998  Per Cederqvist  <ceder@gratia>
+
+	Make the bootstrap and release procedures a little simpler.
+	* README.DEVO: Move code to bootstrap.sh; use that file.  Insert
+	the patch to automake that is needed to create a fully working
+	cmod module.  (The patch has been accepted by Tom Tromey, so
+	future versions of automake should not need it).
+	* RELEASING: Move code to mkrel.sh; use that file.
+	* mkrel.sh: New file.
+	* bootstrap.sh: New file.
+
+	Avoid non-portable file names in the distribution.
+	* Makefile.am (path-check): New target.
+	* testsuite/Makefile.tmpl (EXTRA_DIST): Replaced gen-makefile.py
+	with mkmf.py.
+	($(srcdir)/Makefile.am): Likewise.
+	* testsuite/gen-makefile.py: Renamed to mkmf.py.
+	* testsuite/mkmf.py: New name for former gen-makefile.py.
+
+Wed Sep 16 22:39:00 1998  Kent Engström  <kent@.lysator.liu.se>
+
+	Update usage text.
+	* cmod.c (usage): Add lines for try-add, avail and --version.
+	* testsuite/t023.ok: Likewise.
+
+Tue Sep 15 00:02:44 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Port to Dynix 3.1.1 with gcc.
+	* cmod_alloc.h: Mention that <sys/types.h> is needed by this file.
+	* cmod_token.c: Include <sys/types.h>
+	* cmod_string.c: Include <sys/types.h>
+	* cmod_process.c: Include <sys/types.h>
+
+	* configure.in: Snapshot 1.0.post.7.
+
+Mon Sep 14 09:21:18 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Clean up clean-sh.
+	* testsuite/Makefile.tmpl (INCLUDES): Added -I$(top_srcdr).
+	* testsuite/clean-sh.c: Include <config.h>, <unistd.h> and
+	"unused.h".  Get rid of some warnings.
+
+	Fixes to the printed manual.
+	* cmod.texi (Top): Don't display this node in the printed manual.
+	(New releases): Layout and latin-1 fixes for the printed manual.
+
+	Fix "make dist" when srcdir isn't ".".
+	* testsuite/Makefile.tmpl (dist-hook): Fail if a directory cannot
+	be copied.  Copy it from $(srcdir).
+
+Mon Sep 14 08:45:27 1998  Per Cederqvist  <ceder@gratia>
+
+	Expect automake to generate texinfo.tex.
+	* RELEASING: Regenerate texinfo.tex.
+	* Makefile.am (MAINTAINERCLEANFILES): Added texinfo.tex.
+
+Mon Sep 14 01:35:19 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* testsuite/clean-sh.c (main): Provide an empty PATH to prevent
+ 	bash from setting a default PATH.
+
+Mon Sep 14 01:08:17 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 1.0.post.6.
+
+	Fixes to make clean-sh work.
+	* testsuite/clean-sh.c (main): Whitespace fixes so that ansi2knr
+	groks the syntax.
+	* testsuite/Makefile.tmpl (AUTOMAKE_OPTIONS): Added ../ansi2knr
+	and gnu.
+	* testsuite/t025.sh: Don't use unset; rely on clean-sh to do that.
+	* testsuite/t030.sh.in: Likewise.
+	* testsuite/t044.sh.in: Likewise.
+
+Mon Sep 14 00:49:14 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* testsuite/clean-sh.c: New file. This is a wrapper around /bin/sh
+	which clears the environment before executing sh.  Only MODULEPATH
+	is kept.
+	* testsuite/Makefile.tmpl (CMODTEST): Replaced MODULEINIT with
+	this.  It defines how tests are launched using clean-sh.
+	(noinst_PROGRAMS): Added clean-sh.
+
+	* AUTHORS: Added myself.
+
+Mon Sep 14 00:07:58 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Ported to /bin/cc on Sequent Symmetry/Dynix 3.1.1.
+	* README.DEVO: This needs automake-1.3b with a patch.
+	* MACHINES: Added info about Sequent Symmetry/Dynix 3.1.1.
+	* testsuite/t001.sh (PATH): Set it to /bin:/usr/bin so that echo
+	is found on systems where it isn't built into /bin/sh.
+	* testsuite/t060.sh (PATH): Likewise.
+	* testsuite/t065.sh (PATH): Likewise.
+	* testsuite/t071.sh (PATH): Likewise.
+	* configure.in: Check for memmove and getcwd.
+	* cmod_process.c: Don't include <stdlib.h> unless it exists.
+	* cmod.c (S_ISDIR): Provide a definition for systems that lack it.
+	(S_ISLNK): Likewise.
+	(canonicalize_path): Reallocate the buffer until the result from
+	getcwd fits in it.   Use getwd() on systems which don't have
+	getcwd.
+	* archaic.h (memmove): Define it in terms of bcopy if HAVE_MEMMOVE
+	isn't defined.
+	* cmod_string.c: Check PROTOTYPES for forward declarations of
+	static functions.  Include <stdio.h>.
+	* cmod_preproc.c: Check PROTOTYPES for forward declarations of
+	static functions.
+
+Sun Sep 13 14:33:54 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Get rid of "struct token_state".
+	* cmod_token.h (struct token_state): Removed.
+	(token_state_ctor): Removed.
+	(token_state_dtor): Removed.
+	(cmod_tokenize): Replaced the buffer argument with buffer and
+	eof_seen.  All callers updated.
+	* cmod_token.c (token_state_ctor): Removed.
+	(token_state_dtor): Removed.
+	(next_char): Replaced the buffer argument with buffer and
+	eof_seen.  All callers updated.
+	(cmod_tokenize): Likewise.
+	(tok_error): The buffer argument is now based on struct cmod_str,
+	not struct token_state.
+	* cmod_preproc.h: (cmod_preprocess): Replaced the buffer argument
+ 	with eof_seen.
+	* cmod_preproc.c (variable): Replaced the buffer argument with
+	eof_seen.  All callers updated.
+	(script_backslash): Likewise.
+	(script): Likewise.
+	(dollar): Likewise.
+	(cmod_preprocess): Likewise.
+	* cmod_parse.c (cmod_parse_module): Adapted to new API of
+	cmod_tokenize.
+
+	Remove more in the clean targets.
+	* Makefile.am (MOSTLYCLEANFILES): Added enforce-recheck.
+	(MAINTAINERCLEANFILES): New target.  Added lots of files.
+	* testsuite/Makefile.tmpl (MAINTAINERCLEANFILES): Added
+	Makefile.am and Makefile.in.
+	(MOSTLYCLEANDIRS): New variable.  Add the directories that are
+	created by test cases.
+	(mostlyclean-local): New target.
+
+	Re-added support for compilers that don't understand prototypes.
+	* acconfig.h (PROTOTYPES): Let this default to being undefined.
+	* Makefile.am (cmod_SOURCES): Added cmod_strp.h and cmod_strn.h.
+	(BUILT_SOURCES): Added cmod_strn.h.
+	(cmod_strn.h): New target.
+	(cmod_string.h): Always depend on cmod_strn.h.
+	* cmod_string.h: Moved all prototypes to cmod_strp.h.  Include
+	that file if PROTOTYPES is defined; otherwise, import cmod_strn.h
+	instead and expect it to provide unprotoized function
+	declarators.
+	* cmod_strp.h: New file, extracted from cmod_string.h, containing
+	all the function prototypes.
+	* cmod_preproc.h: Provide non-PROTOTYPES support.
+	* cmod_process.h: Likewise.
+	* cmod_token.h: Likewise.
+
+	Remove a few automake-generated files from CVS.
+	* RELEASING: Regenerate install-sh and mkinstalldirs.
+	* install-sh: Generated by automake; no longer kept under version
+	control.
+	* mkinstalldirs: Likewise.
+
+Sun Sep 13 11:11:57 1998  Per Cederqvist  <ceder@gratia>
+
+	Improved the release instructions.
+	* RELEASING: Don't forget to run autoheader.  Regenerate the files
+	that automake supplies.  Do a "make clean" and "make" to ensure
+	that all the dependencies are generated properly.
+
+	Remove READLINK_EIO_BROKEN.
+	* acconfig.h (READLINK_EIO_BROKEN): Removed.
+	* cmod.c (avail_modules_recursively): Don't test
+	READLINK_EIO_BROKEN.
+	* configure.in: Removed READLINK_EIO_BROKEN.  It is impossible to
+	test for that condition in a proper way, and there are systems
+	that fail with EINVAL instead of EIO.  We cannot attempt to handle
+	all variations.  Since we start with a buffer that is for all
+	practical purposes more than large enough we simply lose if
+	somebody is insane enough to use a very long symlink an a system
+	where readlink is broken.  It is better that a few suffer than
+	that all of us have to stand overly complex code.
+
+	Fixed whitespace in acconfig.h.
+	* acconfig.h: Whitespace removed so that autoheader groups
+	the comments with the proper symbol.
+
+Sat Sep 12 15:23:40 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 1.0.post.5.
+	* NEWS: Documented the changes since 1.0.
+
+	Added a first draft of all the remaining documentation.  It should
+	now be fairly complete.
+	* cmod.texi: Spell checking performed.
+	(Invoking module): Chapter written.
+	(add): New node.
+	(use): New node.
+	(list): New node.
+	(Preprocessor): Document modifiers and arguments to variable
+	expansion.
+	(Directories): New node.
+	(Altering the environment): New node.
+	(append-path): New node.
+	(prepend-path): New node.
+	(remove-path): New node.
+	(setenv): New node.
+	(unsetenv): New node.
+	(Environment variables): New node.
+	(Bugs): More text added.
+
+	Don't evaluate shell escapes or variable expansions in arguments
+	to modifiers in variable expansions unless they are used.
+	* cmod_preproc.c (variable): Don't evaluate the argument to the
+	modifier unless it is needed.  Res may be NULL.
+	(script_backslash): Res may be NULL.
+	(script): Likewise.
+	(dollar): Likewise.
+	(cmod_preprocess): Likewise.
+	* testsuite/t071-1: New file, testing that the argument to
+	modifiers isn't used unless it should be used.
+	* testsuite/t071.ok: Likewise.
+	* testsuite/t071.sh: Likewise.
+	* testsuite/t072-1: Likewise.
+	* testsuite/t072.ok: Likewise.
+	* testsuite/t072.sh: Likewise.
+
+	Total rewrite of the preprocessor using recursive descent
+	techniques.  Variable expansion now works the same at top level
+	and inside shell escapes.  The argument part of variable expansion
+	modifiers is subject to variable expansion and shell escapes.
+	* cmod_preproc.c: (enum dollar_state): Removed
+	(enum inner_state): Removed.
+	(enum pa_state): Removed.
+	(prep_error): Don't append a newline.
+	(variable): New static function.
+	(script_backslash): Likewise.
+	(script): Likewise.
+	(dollar): Likewise.
+	(cmod_preprocess): Use the above functions to simplify the code
+	immensely.  This function is now a mere 41 lines long instead of
+	344.  Where there used to be 12 switch statements there is now
+	only 6, and they are not as deeply nested.
+	* cmod_token.c (next_char): Adapted to new API of cmod_preprocess.
+	* cmod_preproc.h (cmod_preprocess): New arguments: end_char and
+	res.
+	* testsuite/t025.ok.in: Fixed an error message: variables are
+	unset, not unbound.
+	* testsuite/t054-1: Insert the '-' modifier so that unset
+	variables isn't an error.
+	* testsuite/t065-1: New file, that tests recursive shell escapes
+	and some variations on variable expansion.
+	* testsuite/t065.ok: New file.
+	* testsuite/t065.sh: New file.
+	* testsuite/t066-1: New file, testing the '+', '-' and '=' modifiers.
+	* testsuite/t066.ok: Likewise.
+	* testsuite/t066.sh: Likewise.
+	* testsuite/t067-1: Test the '?' modifier.
+	* testsuite/t067.ok: Likewise.
+	* testsuite/t067.sh: Likewise.
+	* testsuite/t068-1: Likewise.
+	* testsuite/t068.ok.in: Likewise.
+	* testsuite/t068.sh: Likewise.
+	* testsuite/t069-1: Likewise.
+	* testsuite/t069.ok: Likewise.
+	* testsuite/t069.sh: Likewise.
+	* testsuite/t070-1: Likewise.
+	* testsuite/t070.ok: Likewise.
+	* testsuite/t070.sh: Likewise.
+
+	Use the same conventions for include protections in all header files.
+	* cmod_alloc.h (CMOD_ALLOC_H): Use this instead of CMOD_ALLOC to
+	protect against multiple inclusion.
+
+	More portable handling of the exit status from pclose.
+	* configure.in: Added AC_HEADER_SYS_WAIT.
+	* cmod_wait.h: New file, that attempts to defines WIFEXITED,
+	WEXITSTATUS, WIFSIGNALED and WTERMSIG for systems that don't have
+	them (or that have buggy versions of them) in <sys/wait.h>.
+	* Makefile.am (cmod_SOURCES): Added cmod_wait.h.
+
+	Port to Solaris 2.7, where "/usr/bin/false" is a shellscript that
+	does "exit 255".
+	* testsuite/t048-1: Use "exit 1" instead of "false", since the
+	exit status on false differs between implementations.
+
+Fri Sep 11 23:25:03 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Performance improvement.
+	* configure.in: Added AC_C_INLINE.
+	* cmod_token.c (next_char): Inline this function, which is only
+	used once.
+
+	Handle some useful variable expansion constructs.
+	* cmod_preproc.c (enum dollar_state): Added state "dollar_alt".
+	(enum pa_state): New state type.
+	(cmod_preprocess): Handle constructs such as ${FOO:-alternative}
+	at top level, but not in $()-constructs.  This function is now 344
+	lines long, contains twelve switch statements nested to a depth of
+	up to four, all contained in a while statement.  A reconstruction
+	is long overdue.
+
+Thu Sep 10 14:39:54 1998  Per Cederqvist  <ceder@gratia>
+
+	Improved the documentation.
+	* cmod.texi (Introduction): Expanded.
+	(Using system defaults): Expanded.
+	(Defining module): Slightly expanded.
+
+	Improved error handling: abort a module at the first error, but
+	the error does not affect the module that imported the module with
+	the error.  Handle attempts to load non-existing modules better.
+	Added "module try-add".
+	* cmod_token.c (cmod_tokenize): Added an "assert(0)".
+	* cmod_main.h (cmod_errors): Removed, since it is now static.
+	* cmod_preproc.c (cmod_preprocess): Print an error message if the
+	command in a shell escape returned a non-zero exit status.
+	* cmod.c (cmod_errors): Now static.
+	(error): New static function.
+	(open_module): New arguments: dont_report_missing,
+	containing_filename and containing_lineno.   Return NULL when the
+	module cannot be loaded instead of exiting.  All callers updated.
+	(do_rm_module): Return an error code if the module couldn't be
+	opened.  All callers updated.
+	(rm_module): Fail if the module couldn't be opened.
+	(do_add_module): Return an error code if the module couldn't be
+	opened.  Don't append the module to LOADEDMODULES if the parsing
+	failed.
+	(add_module): Fail if the module couldn't be opened.
+	(add_module_if_present): New function.
+	(cmd_table): New command: try-add.
+	(main): Set the environment even if an error occurs.  Exit with
+	CMOD_EXIT_ERROR if an error occurs.
+	* cmod_parse.h: Comment improved.
+	* cmod_parse.c (syntax_error): Don't touch cmod_errors.
+	(cmod_parse_module): Stop when the first error is found.  Don't
+	put the erring command on the undo list.  A command errs whenever
+	it gives a non-zero return code.
+	* testsuite/Makefile.tmpl ($(TEST_SG)): Fixed a typo.
+	* testsuite/t036.ok.in: Expect PATH to be explicitly cleared.
+	* testsuite/t064.sh: New file, that tests "module add" of a
+	non-existing module.
+	* testsuite/t064.ok.in: Likewise.
+	* testsuite/t064-1: Likewise.
+	* testsuite/t063.sh: New file, that tests "module try-add".
+	* testsuite/t063.ok: Likewise.
+	* testsuite/t063-1: Likewise.
+	* testsuite/t048.ok: Renamed to t048.ok.in.
+	* testsuite/t048.ok.in: New file.
+
+Wed Sep  9 22:12:07 1998  Per Cederqvist  <ceder@gratia>
+
+	Quoting inside shell escape constructs was broken.
+ 	* cmod_preproc.c (cmod_preprocess): Fixed a bug that caused '$'
+	to be inserted instead of '(', '\' or ')' when those characters
+	were quoted inside a shell escape construct.
+	* testsuite/t060.sh: New file, testing quoting inside shell escape
+	constructs.
+	* testsuite/t060.ok: New file.
+	* testsuite/t060-1: New file.
+	
+	Chars with bit 8 set could trigger an assertion.
+	* cmod_string.c (str_append_char): Don't fail if chars are signed.
+	* testsuite/t061-1: New file, testing parsing of characters with
+	the 8:th bit set.
+	* testsuite/t061.sh: New file.
+	* testsuite/t061.ok: New file.
+	
+	Better low-level handling of unset variables.
+	* env.h (env_ctor): Removed.
+	(env_dtor): Removed.
+	(env_value): May now return 3 meaning "unsest and clean".
+	(envarray_locate_create): New API.
+	* env.c (struct env): Both "unset" and "clean" may be set at the
+	same time.  Update the comments to reflect that fact.
+	(env_sane): Assertions fixed according to the above.
+	(env_ctor): Now static.
+	(env_dtor): Now static.
+	(env_defragment): Use str_append_char instead of str_append_buf to
+	simplify code.
+	(envarray_locate_create): Removed the arguments "read_env" and
+	"auto_create".  This function now works as if they were always
+	set.
+	* cmod_token.h (cmod_tokenize): Fixed a comment.
+	* cmod_process.c (setup_child_environ): Handle the new return code
+	'3' from env_environ.
+	* cmod_preproc.c (cmod_preprocess): Adapted to new API of
+	envarray_locate_create and env_value. 
+	* cmod.c: Adapted to new API of envarray_locate_create.
+	* cmod.texi: Typographic changes of quotations.
+	(Preprocessor): Document unset variables and error handling.
+  	Reserve some characters for future use in variables, so that
+ 	constructs such as ${foo:-bar} can later be implemented.
+
+	One more test (that failed to reveal any bugs).
+	* testsuite/t062.sh: New file, that tests appending a value to the
+	empty string.
+	* testsuite/t062.ok: New file.
+	* testsuite/t062-1: New file.
+	
+Wed Sep  9 13:37:10 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Improved the documentation.
+	* cmod.texi (Introduction): Added some texts.  More needed.
+	(Preprocessor): Quote from Garbage added.
+	(New releases): New chapter.
+
+Sun Sep  6 17:12:59 1998  Per Cederqvist  <ceder@gratia>
+
+	Use autoconf-generated <config.h>.
+	* cmod.c: Include <config.h>.
+	* cmod_alloc.c: Include <config.h>.
+	* cmod_parse.c: Include <config.h>.
+	* cmod_preproc.c: Include <config.h>.
+	* cmod_process.c: Include <config.h>.
+	* cmod_string.c: Include <config.h>.
+	* cmod_token.c: Include <config.h>.
+	* cmod_trace.c: Include <config.h>.
+	* env.c: Include <config.h>.
+	* strdup.c: Include <config.h>.
+	* README.DEVO: Mention that autoheader is needed.
+	* stamp-h.in: New file.
+	* configure.in: Use AM_CONFIG_HEADER.
+	* acconfig.h: New file.
+
+Tue Aug 18 18:41:21 1998  David Kågedal  <davidk@lysator.liu.se>
+
+	* cmod.c (canonicalize_path): New function that make absolute
+ 	paths from relative.
+	(do_use_path,do_unuse_path): Use it.
+
+Tue Aug 18 00:09:43 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Yesterdays fix to "module avail" was broken.  Improve it.
+	* cmod.c (avail_modules_recursively): Don't append to strings that
+ 	should be cleared.
+	* testsuite/t059.sh: New file.
+	* testsuite/t059.ok: New file.
+
+Mon Aug 17 23:08:09 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Fixed a bug that caused "module avail" to omit the subdirectory
+	part of a module name.
+	* THANKS: Added assar and Mattias Amnefelt.
+	* cmod.c (open_module): Use str_append_char instead of
+ 	str_append_asciz.
+	(avail_modules_recursively): Likewise.  Don't forget the subdir
+ 	when creating the name of a module file that resides in a subdir.
+	Reported by Mattias Amnefelt.  assar helped to track down the
+	bug.
+
+	Improved test cases for "module avail".
+	* testsuite/t057.ok.in: Removed.
+	* testsuite/t057.ok: New file (that replaces t057.ok.in).
+	* testsuite/t057.sh: Fixed typos.
+	* testsuite/t058.ok: New file.
+	* testsuite/t058.sh: New file.
+
+	Generated files should depened on the files they are created
+	from.
+	* testsuite/gen-makefile.py (target.compute): Compute indirect
+	dependencies of generated files.
+	(target.dep_line): Emit the indirect dependencies.
+
+Sun Aug 16 21:26:32 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Added a test case that demonstrates "module avail" brokenness.
+	* testsuite/t057.ok.in: Expected result.
+	* testsuite/t057.sh: Test that "module avail" gives sane output
+	for subdirectories.
+
+	Misc code maintenance.
+	* testsuite/gen-makefile.py (target.a_or_b): Fixed an error in an
+	error message.
+	* acinclude.m4 (CMOD_COMPILER_CC_ACCEPTS): Added a comment stating
+	that this is frozen, and that anyone is invited to reuse it.
+
+	Rely on automake 1.3 to run ansi2knr after the C preprocessor.
+	* Makefile.am (ANSI2KNR_FILTER): Removed.
+
+Fri Jun 19 21:43:12 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 1.0.post.4.
+
+	Fixed a couple of bugs that caused cmod to dump core when given
+	empty fragments.
+	* env.c (env_fragment): Handle fragments that are the empty
+	string.
+	* cmod_string.c (str_strcmp): Don't dump core on empty strings.
+	* testsuite/t056.sh: New test case that tests a PATH that contains
+	"::".
+	* testsuite/t056.ok: Expected result.
+	* testsuite/t055.sh: New test case that tests a pre-set PATH that
+ 	begins with ":".
+	* testsuite/t055.ok: Expected result.
+
+	Fixed the test suite.
+	* testsuite/t025.ok: Removed.
+	* testsuite/t025.ok.in: New name for former t025.ok.  Substitute
+	the path to the offending module, so that the test suite works
+	with --srcdir.
+
+Fri Jun 19 20:43:12 1998  Per Cederqvist  <ceder@signum.se>
+
+	Document how bugs should be reported.
+	* cmod.texi (Bugs): New chapter.
+
+Sun May 24 16:08:00 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 1.0.post.3.
+
+	Ported the last few changes to Solaris 2.6.
+	* cmod_process.c (environ): Added an explicit declaration of it,
+	since <stdlib.h> doesn't declare it on Solaris 2.6.
+	* testsuite/t041.sh: Use explicit export statements even for
+	variables that are imported.  Bash automatically re-exports them,
+	but /bin/sh does not.
+	* testsuite/t045.sh: Likewise.
+	* testsuite/t046.sh: Likewise.
+	* testsuite/t047.sh: Likewise.
+	* testsuite/t048.sh: Likewise.
+	* testsuite/t051.sh: Likewise.
+	* testsuite/t052.sh: Likewise.
+	* testsuite/t053.sh: Likewise.
+	* testsuite/t054.sh: Likewise.
+
+Sat May 23 20:40:17 1998  Per Cederqvist  <ceder@gratia>
+
+	Produce less paranoid code if NDEBUG is defined.
+	* cmod_string.c (str_sane): str_sane is a dummy if NDEBUG is
+	defined.
+	* env.c (env_sane): env_sane is a dummy if NDEBUG is defined.
+
+	Pass the current environment, including changes made so far, to
+	subprocesses.
+	* cmod_preproc.c (cmod_preprocess): Write a comment about the fact
+ 	that unset variables are handled in an inconsequential manner.
+	* env.c (struct env): New fields: kv_valid and key_and_val.
+	(assert_kv): New static function.
+	(env_sane): Check kv_valid and key_and_val.  unset and clean can
+	never both be set.
+	(env_ctor): Initialize kv_valid and key_and_val.
+	(env_dtor): Destruct key_and_val.
+	(env_append_one_frag): Clear kv_valid when appropriate.
+	(env_remove_one_frag): Likewise.
+	(env_prepend_one_frag): Likewise.
+	(env_setenv): Likewise.
+	(env_unsetenv): Likewise.
+	(env_value): New API: returns an int.
+	(env_environ): New function.
+	(envarray_map): New function.
+	* env.h (env_value): New API: returns an int.
+	(env_environ): New function.
+	(envarray_map): New function.
+	* cmod_process.c (child_environ): New static variable.
+	(child_env_size): Likewise.
+	(child_next): Likewise.
+	(grow_environ): New static function.
+	(append_env): Likewise.
+	(assert_not_match): Likewise.
+	(add_if_not_present): Likewise.
+	(setup_child_environ): Likewise.
+	(cmod_popen): Make sure the child gets the proper environment.
+	* testsuite/t051-1: New file.
+	* testsuite/t051.ok: New file.
+	* testsuite/t051.sh: New file.
+	* testsuite/t052-1: New file.
+	* testsuite/t052.ok: New file.
+	* testsuite/t052.sh: New file.
+	* testsuite/t053-1: New file.
+	* testsuite/t053.ok: New file.
+	* testsuite/t053.sh: New file.
+	* testsuite/t054-1: New file.
+	* testsuite/t054.ok: New file.
+	* testsuite/t054.sh: New file.
+
+Fri May 22 13:19:42 1998  Per Cederqvist  <ceder@gratia>
+
+	Handle special characters in variables.
+	* env.c (env_dump): Quote special characters.
+	* testsuite/t049-1: New file.
+	* testsuite/t049.ok.in: New file.
+	* testsuite/t049.sh: New file.
+	* testsuite/t050-1: New file.
+	* testsuite/t050.ok: New file.
+	* testsuite/t050.sh: New file.
+
+	Implemented shell escapes.
+	* Makefile.am (cmod_SOURCES): Added cmod_process.h and
+	cmod_process.c.
+	* cmod_process.h, cmod_process.c: New file.
+ 	(cmod_popen): New function.
+	* cmod_preproc.c (cmod_preprocess): Implemented shell escapes.
+	* cmod.texi (Preprocessor): Improved documentation of shell escapes.
+	* testsuite/t045-1: New file.
+	* testsuite/t045.ok: New file.
+	* testsuite/t045.sh: New file.
+	* testsuite/t046-1: New file.
+	* testsuite/t046.ok: New file.
+	* testsuite/t046.sh: New file.
+	* testsuite/t047-1: New file.
+	* testsuite/t047.ok: New file.
+	* testsuite/t047.sh: New file.
+	* testsuite/t048-1: New file.
+	* testsuite/t048.ok: New file.
+	* testsuite/t048.sh: New file.  This test currently fails due to
+	improper error recovery when a shell command gives a non-zero exit
+	status.
+
+	Added more functionality to the string library.
+	* cmod_string.h: Reordered the functions to provide better
+	overview of the code.  Improved the comments.
+	* cmod_string.c, cmod_string.h (str_remove_last): New function.
+	(str_tail): New function.
+
+	Fixed a typo.
+	* cmod_string.c (str_clear): Typo fixed: compare the string buffer
+ 	size against 0, not NULL.
+
+Thu May 21 16:23:48 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 1.0.post.2.
+
+	Fixed a bug in the string library that caused str_asciz to
+	sometimes return trailing garbage, thus eliminating the final
+	failures from the test cases.
+	* cmod_string.c: Document the internal representation of a string.
+	(str_sane): Adjusted accordingly.
+	(str_clear): NUL-terminated the string.
+	(str_truncate): NUL-terminated the string.
+	* cmod.c (open_module): Truncate the filename of the module
+	properly, to avoid ever printing "module foo/default lacks
+	foo/default/default".
+	
+	Implement copy-on-write semantics on strings, thus eliminating two
+	failures from the test cases.
+	* cmod_string.h (str_truncate): The string is modified, and thus
+	logically not const.
+	(str_remove_first): Likewise.
+	(str_own): Removed from the API.
+	* cmod_string.c (str_own): Now a static internal helper function.
+	(str_clear): Implement copy-on-write semantics.
+	(str_append_asciz): Likewise.
+	(str_append_str): Likewise.
+	(str_append_buf): Likewise.
+	(str_append_char): Likewise.
+	(str_truncate): Likewise. The string is modified, and thus
+	logically not const.
+	(str_remove_first): Likewise.
+
+	Improved error handling: Fail if attempting to read an unset
+	variable in a ${var}-construct.  Fix the exit status when an error
+	occurs.  Test t025 no longer fails.
+	* env.h, env.c (envarray_locate_create): New API: new argument:
+	auto_create.
+	* cmod_token.h (enum cmod_status): New enum.
+	(cmod_tokenize): New API: return an "enum cmod_status".
+	* cmod_token.c (next_char): New API that can return all
+	information that cmod_preprocess returns.
+	(cmod_tokenize): Return an "enum cmod_status".
+	* cmod_preproc.h (cmod_preprocess): Return an "enum cmod_status".
+	* cmod_preproc.c (prep_error): Adjusted the line numbers.
+	(cmod_preprocess): Return an "enum cmod_status", so that the
+ 	caller can see the difference between an error and an end-of-file
+ 	condition.  Report attempts to use unset variables in
+	${var}-constructs as an error.
+	* cmod_parse.c (cmod_parse_module): Adapted to new API of
+	cmod_tokenize.
+	* cmod.c: Adapted to new API of envarray_locate_create.
+	(do_add_module): Increase cmod_errors if parse_module indicates
+	failure.
+	(parse_module): Return a failure indication.
+	* testsuite/t025.ok: Expect a new and improved improved error
+	message.
+
+	Plugged a few memory leaks.
+	* env.c (env_sane): Don't forget to free defrag.
+	(envarray_locate_create): Don't forget to free env_buf.
+	* cmod_string.c (str_dtor): Don't forget to free the
+	cmod_str_internal struct.
+	* cmod_preproc.c (cmod_preprocess): Don't forget to free shellbuf
+	and varbuf.
+	* cmod_parse.c (cmod_parse_argv): Don't forget to free the last
+	string in argv_str.
+
+	Added an assertion.
+	* cmod_token.c (cmod_tokenize): Added an assertion.
+
+Sun May 17 14:24:40 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Fixed a bad cast.
+	* env.c (env_prepend_frags): Fixed a bad cast.
+
+Sun Mar  8 21:53:06 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 1.0.post.1.
+
+	Updated copyright statements.
+	* Makefile.am: Updated copyright statement.
+	* acinclude.m4: Likewise.
+	* archaic.h: Likewise.
+	* cmod.c: Likewise.
+	* cmod_alloc.c: Likewise.
+	* cmod_alloc.h: Likewise.
+	* cmod_dirent.h: Likewise.
+	* cmod_main.h: Likewise.
+	* cmod_parse.c: Likewise.
+	* cmod_parse.h: Likewise.
+	* cmod_preproc.c: Likewise.
+	* cmod_preproc.h: Likewise.
+	* cmod_string.c: Likewise.
+	* cmod_token.c: Likewise.
+	* cmod_token.h: Likewise.
+	* cmod_trace.c: Likewise.
+	* cmod_trace.h: Likewise.
+	* configure.in: Likewise.
+	* create_sample: Likewise.
+	* env.c: Likewise.
+	* env.h: Likewise.
+	* strdup.c: Likewise.
+	* testsuite/Makefile.tmpl: Likewise.
+	* testsuite/gen-makefile.py: Likewise.
+	* unused.h: Likewise.
+
+	Update the test suite to the changes below.
+	* testsuite/t024-1: Use "${VAR}" syntax instead of "$env(var)".
+	* testsuite/t030-fb/beta: Likewise.
+	* testsuite/t030-fb/user: Likewise.
+	* testsuite/t037-1: Likewise.
+	* testsuite/t005.ok.in: Expect a new and improved error message.
+	* testsuite/t034.ok.in: Likewise.
+	* testsuite/t035.ok.in: Likewise.
+	* testsuite/t036.ok.in: Likewise.
+
+	Implemented a tokenizer.
+	* cmod_token.h: New file.
+	(struct token_state): New struct.
+	(token_state_ctor): New function.
+	(token_state_dtor): New function.
+	(cmod_tokenize): New function.
+	* cmod_token.c: New file.
+	(enum parse_state): New enum.
+	(enum quote_state): New enum.
+	(token_state_ctor): New function.
+	(token_state_dtor): New function.
+	(next_char): New function.
+	(append_token): New function.
+	(append_char): New function.
+	(tok_error): New function.
+	(cmod_tokenize): New function.
+
+	Implemented a preprocessor.
+	* cmod_preproc.h: New file.
+	(cmod_preprocess): New function.
+	* cmod_preproc.c: New file.
+	(enum dollar_state): New enum.
+	(enum inner_state): New enum.
+	(prep_error): New function.
+	(cmod_preprocess): New huge function.
+
+	Use the new tokenizer and preprocessor.
+	* cmod_parse.c (hunt_for): Removed.
+	(get_word): Removed.
+	(get_word_expand_variables): Removed.
+	(cmod_parse_module): New API using struct cmod_str instead of
+	char*.  Call cmod_tokenize to get a tokenized line of input.
+	Undo the module if any of the commands fails.
+	(cmod_parse_argv): Adapted to new API of cmod_parse_module.
+	* Makefile.am (cmod_SOURCES): Added cmod_token.h, cmod_token.c,
+	cmod_preproc.h and cmod_preproc.c.
+
+	Use the string library instead of char* wherever it is appropriate
+	to do so.
+	* env.h: (env_frag_present): Use struct cmod_str instead of char*
+	in API.
+	(env_append_one_frag): Likewise.
+	(env_append_frags): Likewise.
+	(env_prepend_one_frag): Likewise.
+	(env_prepend_frags): Likewise.
+	(env_remove_one_frag): Likewise.
+	(env_remove_frags): Likewise.
+	(env_setenv): Likewise.
+	(envarray_locate): Likewise.
+	(envarray_locate_create): Likewise.
+	(env_value): New API.
+	(env_iterate): New API.
+	* env.c (struct env): Use struct cmod_str instead of char*
+	as base for name, frags and non_fragmented.  New fields:
+	frags_allocated and non_fragmented_valid.
+	(env_sane): Removed argument "relax".  All callers updated.
+	Adjusted to the new struct env.
+	(env_ctor): Adjusted to the new struct env.
+	(env_dtor): Likewise.
+	(env_invalidate_unfragmented): Likewise.
+	(env_invalidate_fragmented): Likewise.
+	(env_fragment): Likewise.
+	(env_dump): Likewise.
+	(env_defragment): New function.  All callers that previously
+	called env_value only to defragment a struct env now calls this
+	function instead.
+	(require_fragments): New function.
+	(env_frag_present): Adjusted to the new struct env.  Use struct
+	cmod_str instead of char* in API.
+	(env_append_one_frag): Likewise.
+	(env_remove_one_frag): Likewise.
+	(env_append_frags): Likewise.
+	(env_prepend_one_frag): Likewise.
+	(env_prepend_frags): Likewise.
+	(env_remove_frags): Likewise.
+	(env_setenv): Likewise.
+	(envarray_locate): Likewise.
+	(envarray_locate_create): Likewise.
+	(env_iterate): New API.
+	(env_value): New API.  Simplified using env_defragment.
+	* cmod_parse.h (struct cmd): New API of undo and doit using struct
+	cmod_str instead of char*.
+	(cmod_parse_module): New API using struct cmod_str instead of
+	char*.
+	* cmod_parse.c (struct undo_chain): New API of undo using struct
+	cmod_str instead of char*.  Use struct cmod_str instead of char*
+	as base for argv.
+	(locate_match): New API using struct cmod_str instead of char*.
+	(syntax_error): Likewise.  Print the offending line.
+	* cmod.c (struct avail_info): name is now a cmod_str.
+	(const_modulepath): New constant.
+	(const_loadedmodules): New constant.
+	(global_ctors): New function.
+	(global_dtors): New function.
+	(parse_module): New API using struct cmod_str instead of char*.
+	(warning): Likewise.
+	(append_path): Likewise.
+	(prepend_path): Likewise.
+	(remove_path): Likewise.
+	(set_env): Likewise.
+	(unset_env): Likewise.
+	(do_use_path): Likewise.
+	(use_path): Likewise.
+	(do_unuse_path): Likewise.
+	(unuse_path): Likewise.
+	(open_module): Likewise.
+	(do_rm_module): Likewise.
+	(rm_module): Likewise.
+	(add_module): Likewise.
+	(list_modules): Likewise.
+	(no_op): Likewise.
+	(is_module_name): Likewise.
+	(avail_modules_recursively): Likewise.
+	(cmp_avail_infos): Likewise.
+	(cmod_version): Likewise.
+	(parse_module): Likewise.
+	(usage): Likewise.
+	(display_modules): New function, extracted from avail_modules and
+	translated to use struct cmod_str instead of char*.
+	(avail_modules): New API using struct cmod_str instead of char*.
+	Simplify code by calling display_module.
+	(main): Call global_ctors() and global_dtor().
+
+	Fixes and extensions to the string library.
+	* cmod_string.h (str_append_buf): New function.
+	(str_append_char): New function.
+	(str_set_str): New function.
+	(str_truncate): New function.
+	(str_remove_first): New function.
+	(str_strcmp): New function.
+	(copy_str_array): New function.
+	(free_str_array): New function.
+	* cmod_string.c (str_sane): New function, which checks the
+	internal representation of a string.
+	(require): Operate on a struct cmod_str instead of a struct
+	cmod_str_internal.  All callers updated.  Call str_sane().
+	(str_ctor): Call str_sane() to ensure that the representation is
+	sane.
+	(str_dtor): Likewise.
+	(str_clear): Likewise.
+	(str_append_asciz): Likewise.
+	(str_append_str): Likewise.
+	(str_strlen): Likewise.
+	(str_empty): Likewise.
+	(str_copy): Likewise.
+	(str_own): Likewise.
+	(str_append_buf): New function.
+	(str_append_char): New function.
+	(str_set_str): New function.
+	(str_truncate): New function.
+	(str_remove_first): New function.
+	(str_strcmp): New function.
+	(copy_str_array): New function.
+	(free_str_array): New function.
+	(str_asciz): Don't fail if the string is empty and no buffer has
+	been allocated.
+
+Sun Mar  1 23:39:52 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	The string library is now reference counted.
+	* cmod_string.c (struct cmod_str_internal): New struct.
+	(require): New API.  This now works on a struct cmod_str_internal.
+	(str_ctor): Adapted for new data structure.
+	(str_dtor): Likewise.
+	(str_clear): Likewise.
+	(str_append_asciz): Likewise.
+	(str_append_str): Likewise.
+	(str_asciz): Likewise.
+	(str_strlen): Likewise.
+	(str_empty): Likewise.
+	(str_strchr): Likewise.
+	(str_copy): New function.
+	(str_own): New function.
+	* cmod_string.h (struct cmod_str): Now only contains a pointer to
+	a struct cmod_str_internal.
+	(struct cmod_str_internal): New struct.
+	(str_copy): New function.
+	(str_own): New function.
+
+Sat Feb 21 16:33:43 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Code cleanup.
+	* archaic.h (assert): Don't define it unless ASSERT is defined.
+	* cmod.c (unuse_path): Indentation fixed.
+
+	Implemented Yet Another String Library.
+	* Makefile.am (cmod_LDADD): Added cmod_string.h and cmod_string.c.
+	* cmod_string.h: New file.
+	(struct cmod_str): New struct.
+	* cmod_string.c: New file.
+	(require): New function.
+	(str_ctor): New function.
+	(str_dtor): New function.
+	(str_clear): New function.
+	(str_append_asciz): New function.
+	(str_append_str): New function.
+	(str_asciz): New function.
+	(str_strlen): New function.
+	(str_empty): New function.
+	(str_strchr): New function.
+
+Mon Feb 16 00:02:34 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* cmod 1.0 released.
+
+	Release management.
+	* configure.in: Release 1.0.
+	* NEWS: Added an entry for 1.0.
+
+Sun Feb 15 23:49:16 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Release management.
+	* MACHINES: Added a section on FreeBSD.  Updated ABCenix info.
+	* README: Updated the success reports.
+
+	Makefile cleanup.
+	* Makefile.am (install-sample): Extra indentation removed.
+	(.in.init): Likewise.
+	(path.sh): Likewise.
+	(path.csh): Likewise.
+	(enforce-recheck): Adjusted to the new names of the test results.
+	(recheck): Likewise.  Extra indentation removed.
+	* testsuite/Makefile.tmpl (MOSTLYCLEANFILES): Adjusted to the new
+	names of the test results.
+
+	Fixed a bogus test case.
+	* testsuite/t025.sh: Don't export the unset variable HOME.
+	(Exporting it caused the test to fail on FreeBSD 2.1.5).
+
+Sat Feb 14 20:43:18 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.11.
+
+	* MACHINES: Enhanced the section about ABC 1600.
+
+	Clean up testsuite/Makefile and ensure that TEST_GG isn't empty.
+	* testsuite/Makefile.tmpl (RM): New variable.
+	(SUFFIXES): New variable.
+	* testsuite/t044.sh.in: New file.
+	* testsuite/t044.ok.in: New file.
+
+	"make check" failed if --srcdir was used.
+	* testsuite/Makefile.tmpl ($(GENERATED_OK_FILES)): Read the source
+	file from srcdir.
+	($(GENERATED_SH_TESTS)): Likewise.
+
+Sat Feb  7 12:56:27 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.10.
+
+	Clean up generation of testsuite/Makefile.
+	* configure.in: Check for Python.
+	* testsuite/gen-makefile.py (doit): Expect the input and output
+	file names to be given as arguments.
+	* testsuite/Makefile.tmpl (PYTHON): New constant.
+	($(srcdir)/Makefile.am): Use $(PYTHON) to generate it.  Pass file
+	names to gen-makefile.py.
+	* RELEASING: Regenerate testsuite/Makefile.am.
+
+	Clean up testsuite/Makefile.
+	* testsuite/gen-makefile.py (target.compute): Generated files
+	should be given names based on ".out", not ".ok".
+	(pretty_fmt): Sort the string.
+	* testsuite/Makefile.tmpl
+	($(TESTS_SS)): The result ends in .outss, not .okss.
+	($(TESTS_SG)): The result ends in .outsg, not .oksg.
+	($(TESTS_GS)): The result ends in .outgs, not .okgs.
+	($(TESTS_GG)): The result ends in .outgg, not .okgg.
+
+	Ported to SunOS 4.1.4.
+	* cmod.c (open_module): Don't use ANSI-style constant string
+	concatenation.
+	* testsuite/Makefile.tmpl ($(TESTS_SS)): Use "if ... then echo $?
+	; else echo $?; fi" instead of "... ; echo $?" to work around
+	lossage in make on SunOS 4.1.4.
+	($(TEST_SG)): Likewise.
+	($(TEST_GS)): Likewise.
+	($(TEST_GG)): Likewise.
+
+	Avoid GNU makeisms.  Generate testsuite/Makefile.am so that it
+	doesn't have to be edited whenever a new test case is added.
+	* README.DEVO: More boostrapping is needed now that even
+	Makefile.am is generated.
+	* testsuite/gen-makefile.py: New file, which generates Makefile.am
+	from Makefile.tmpl.
+	* testsuite/Makefile.tmpl (EXTRA_DIST): Added gen-makefile.py.
+	* testsuite/Makefile.tmpl: New file, used to generate Makefile.am.
+	* testsuite/Makefile.am: File removed from CVS repository.
+	
+	* configure.in: Snapshot 0.9.post.9.
+
+Sat Feb  7 11:20:28 1998  Per Cederqvist  <ceder@gratia>
+
+	"module avail" no longer lists Emacs autosave files.
+	* cmod.c (is_module_name): New function.  Skip ".", ".." and "*~".
+	(avail_modules_recursively): Use it to simplify code.
+
+Sat Feb  7 00:00:47 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.8.
+
+	Enhanced create_sample.
+	* create_sample: Added more modules and paths to the script.  This
+ 	should now recreate most modules currently used at Lysator and
+ 	Signum Support.
+
+Wed Feb  4 22:42:27 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Added some intelligence to create_sample.
+	* create_sample: Rewritten.  Attempt to create modules that fit
+	the system that runs create_sample.
+
+Mon Feb  2 00:41:13 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Document the desired syntax of module files.
+	* cmod.texi (Module files): New node.
+	(Module syntax): New node.
+	(Preprocessor): New node.
+	(Tokenizer): New node.
+	(Evaluator): New node.
+
+Sun Feb  1 19:27:47 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.7.
+
+	Ported cmod to ABCenix 5.18.
+	* README: cmod compiles on an ABC 1600.
+	* Makefile.am (RM): Set it to "rm -f".
+	(cmod_SOURCES): Added archaic.h.
+	(EXTRA_DIST): Added MACHINES.
+	(path.sh, path.csh): Don't use $< in a non-pattern rule.
+	* MACHINES: New file.  Document what needs to be done to compile
+	cmod on an ABC 1600.
+
+Sat Jan 31 23:44:31 1998  Per Cederqvist  <ceder@lysator.liu.se>
+	
+	Improve portability of cmod to ABCenix 5.18.
+	* archaic.h: New file.
+	* strdup.c: Include <stdlib.h> if HAVE_STDLIB_H.
+	(strdup): Don't use prototypes.
+	* env.c: Include <sys/types.h> and "archaic.h".
+	* configure.in: Check whether errno.h declares errno.  Check if
+	opendir is present in the posix library.
+	* cmod_trace.c: Include <sys/types.h>.
+	* cmod_parse.c: Include <sys/types.h> and "archaic.h".
+	* cmod_alloc.c: Include <sys/types.h>.
+	* cmod.c: Include "archaic.h".
+	(usage): Don't use ANSI-style string concatenation.
+
+Wed Jan 28 08:38:26 1998  Per Cederqvist  <ceder@signum.se>
+
+	Avoid an "unbound varable" error if the user sets "set -u" before
+	sourcing the cmod init file (reported by Thomas Bellman).
+	* sh.in: Use "set +u".
+	* ksh.in: Use "set +u".
+	* bash.in: Use "set +u".
+
+Mon Jan 26 00:23:59 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Improve portability of cmod to ABCenix 5.18.
+	* configure.in: Don't check if readlink is broken unless readlink
+	exists.
+	* unused.h: Don't use "#elif".  It isn't supported under ABCenix.
+	* cmod_dirent.h: Don't include <sys/types.h>.  It cannot be
+	included twice on ABCenix.
+	* cmod_alloc.h: Check HAVE_STDLIB_H.
+
+Sun Jan 18 14:43:48 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Increase portability by not relying on readlink(), <stdlib.h> or
+	<stdarg.h>.
+	* cmod_trace.h: Check HAVE_STDARG_H.
+	* configure.in: Check for <stdlib.h>, <stdarg.h> and readlink.
+	* cmod_trace.c: Check HAVE_STDARG_H.
+	* cmod_parse.c: Check HAVE_STDLIB_H.
+	* env.c: Check HAVE_STDLIB_H.
+	* cmod.c: Check HAVE_STDLIB_H.
+	(avail_modules_recursively): Check HAVE_READLINK.
+
+Fri Jan 16 00:05:06 1998  Per Cederqvist  <ceder@gratia>
+
+	Install cmod in /usr/local.  Clean up the installation.
+	* README: Updated the information about paths.
+	* configure.in: Removed AC_PREFIX_DEFAULT.  Install cmod in
+ 	/usr/local by default.
+	* Makefile.am (AUTOMAKE_OPTIONS): Added "gnu".
+	(libexec_PROGRAMS): Install cmod in libexecdir instead of bindir.
+	(CMOD): Adjust accordingly.
+	(pkgsysconfdir): New directory, which replaces initdir.  All users
+	changed.
+	(moduledir): Set to $(pkgsysconfdir)/modulefiles instead of
+	$(prefix)/modulefiles.
+	(pkgsysconf_SCRIPTS): Install *.init and path.* via here.
+	(install-etc): Target removed.  path.sh and path.csh are included
+	in pkgsysconf_SCRIPTS instead.
+	(path.sh): Make an explicit rule for this file.
+	(path.csh): Likewise.
+	(MOSTLYCLEANFILES): Added path.sh and path.csh.
+	(noinst_DATA): Added enforce-recheck.
+	(enforce-recheck): New target, that removes all test results
+	whenever cmod is relinked.
+
+	Rename the sample module "system" to "unix".
+	* create_sample: Renamed the "system" module to "unix".
+
+Fri Jan  9 01:00:12 1998  Per Cederqvist  <ceder@gratia>
+
+	Wrote a little on the documentation.
+	* RELEASING: Update cmod.texi.
+	* cmod.texi (Initializing cmod): New node.
+	(Using system defaults): New node.
+	(Defining module): New node.
+	(Invoking module): New node.
+
+Tue Jan  6 11:33:20 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.6.
+
+	Install the documentation.
+	* Makefile.am (info_TEXINFOS): New variable.
+	* cmod.texi: Include version.texi (which automake provides).
+	All menus and nodes updated.
+ 	(Top): Mention the version number.
+	(Introduction): Acknowledge modules.  Refer to cmd_table for
+	documentation.
+
+Sun Jan  4 02:03:22 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Start to document cmod.
+	* cmod.texi: New file.  So far, this is no more than an untested
+	framework for the documentation.
+
+Sat Jan  3 19:59:02 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Added "module --version".
+	* cmod.c (cmod_version): New function.
+	(cmd_table): Added "module --version".
+
+	Support for broken readlink implementations.
+	* cmod.c (avail_modules_recursively): Initialize symlink_size to a
+	large value, since it appears to be impossible to reliably detect
+	that readlink thinks the supplied buffer was too small.  Free the
+	symlink buffer.
+
+	More fixes to path.csh.
+	* path.csh.in: Load don't forget the ".init" part of
+	csh.init/tcsh.init.
+
+Sat Jan  3 17:18:58 1998  Per Cederqvist  <ceder@gratia>
+
+	Fixes to path.sh and path.csh.
+	* path.csh.in: Attempt to get the csh syntax correct... again.
+	Specifically, don't barf when LOADEDMODULES is unset.  Added
+	debugging support for the shell detection code.
+	* path.sh.in: Handle old zsh versions.  Added debugging support
+ 	for the shell detection code.
+
+Sat Jan  3 06:06:55 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.5.
+
+	Handle --srcdir in the test suite.
+	* testsuite/t041.sh: Handle --srcdir properly.
+	* testsuite/t043.ok.in: New file.
+	* testsuite/t043.ok: File removed.
+	* testsuite/Makefile.am: t043.ok is generated from t043.ok.in.
+
+	"module avail" now looks reasonably nice.
+	* cmod.c (struct avail_info): New struct.
+	(DEFAULT_MODULE): The name of the default module.
+	(open_module): Use DEFAULT_MODULE instead of the private macro
+	VERSION_NAME.
+	(avail_modules_recursively): Rewritten.  Collect info about
+	modules, but don't print anything.  Handle DEFAULT_MODULE.
+	(cmp_avail_infos): New function.
+	(avail_modules): Rewritten.  Sort the data returned by
+	avail_modules_recursively, and print it to stderr.
+	* configure.in: Define READLINK_EIO_BROKEN if readlink sets errno
+	to EIO instead of ERANGE when the supplied buffer is too small.
+
+Fri Jan  2 00:24:28 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Fix syntax error in csh/tcsh init scripts (reported by Mattias
+	Amnefelt).
+	* tcsh.in: Fixed syntax error.
+	* csh.in: Fixed syntax error.
+
+	Distribute the improved initialization files.
+	* Makefile.am (EXTRA_DIST): Added bash.in, tcsh.in, zsh.in and
+	ksh.in.
+
+Thu Jan  1 18:57:15 1998  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.4.
+
+	* README: Talk a little about the installation.
+
+	Load module/default if module is a directory.
+	* configure.in: Added AC_HEADER_STAT.
+	* cmod_parse.c (get_word): New argument: filename.  All callers
+	updated.  Report errors while reading from the file.
+	(locate_match): New argument: filename.  All callers updated.
+	* cmod.c (open_module): If the module turns out to be a directory,
+	open module/default instead and use that file.
+	* testsuite/t041.ok: New file.
+	* testsuite/t041.sh: New file.
+	* testsuite/t042.ok: New file.
+	* testsuite/t042.sh: New file.
+	* testsuite/t043.ok: New file.
+	* testsuite/t043.sh: New file.
+	* testsuite/Makefile.am: Added test cases t041, t042 and t043.
+
+	Improve the initialization files.
+	* path.sh.in:  Only initialize the environment if LOADEDMODULES is
+	empty.  Handle both sh, zsh, ksh and bash.  Clear INFOPATH.
+	* path.csh.in: Only initialize the environment if LOADEDMODULES is
+	empty.  Handle both csh and tcsh.  Clear INFOPATH.
+	* sh.in: Don't clear LOADEDMODULES.  Removed all mention of
+	MODULESHOME (which isn't used by cmod).
+	* csh.in: Don't clear LOADEDMODULES.
+	* Makefile.am (init_SCRIPTS): Added bash.init, tcsh.init, zsh.init
+	and ksh.init.
+	(SUFFIXES): Added .in and .init.
+	(.in.init): Use the old-style make syntax instead of "%.init:%.in"
+	for portability to obsolete make versions.
+	* ksh.in: New file.
+	* zsh.in: New file.
+	* tcsh.in: New file.
+	* bash.in: New file.
+
+Mon Dec 29 00:07:57 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.3.
+
+	Empty values could cause a core dump (reported by Mattias Amnefelt).
+	* env.h (env_value): Updated the documentation: NULL is only
+	returned if the variable is explicitly unset.
+	* env.c (env_value): Return an empty string, and set
+	non_fragmented to an empty string, if the value is empty.
+	NULL is only returned if the variable is explicitly unset.
+	* testsuite/Makefile.am: Added test cases t037, t038, t039 and
+	t040.
+	* testsuite/t037-1: New file.
+	* testsuite/t037.ok: New file.
+	* testsuite/t037.sh: New file.
+	* testsuite/t038.ok: New file.
+	* testsuite/t038.sh: New file.
+	* testsuite/t039-1: New file.
+	* testsuite/t039.ok: New file.
+	* testsuite/t039.sh: New file.
+	* testsuite/t040.ok: New file.
+	* testsuite/t040.sh: New file.
+	* THANKS: Added Mattias Amnefelt.
+
+	Check that the representation of "struct env" objects are correct.
+	* env.c (env_sane): New static function, that checks the
+	representation of a "struct env".
+	(env_ctor): Call env_sane as post-condition.
+	(envarray_locate_create): Likewise.
+	(env_dtor): Call env_sane as pre-condition.
+	(env_fragment): Assertions added.
+	(env_frag_present): Call env_sane as pre- and post-condition.
+	(env_append_one_frag): Likewise.
+	(env_remove_one_frag): Likewise.
+	(env_append_frags): Likewise.
+	(env_prepend_one_frag): Likewise.
+	(env_prepend_frags): Likewise.
+	(env_remove_frags): Likewise.
+	(env_setenv): Likewise.
+	(env_unsetenv): Likewise.
+	(env_dump): Likewise.
+	(env_iterate): Likewise.
+	(env_value): Likewise.
+	* cmod_alloc.c (cmod_alloc_null_object): New name for former
+	null_object.  All users updated.
+	(CMOD_NULL): New define.
+	* cmod_alloc.h (cmod_alloc_null_object): Export this object, so
+	that env_sane can use it.
+	
+	Added "module rm" as a synonym to "module unload".  (Suggested by
+	Mattias Amnefelt).
+	* cmod.c (cmd_table): Added "module rm" as a synonym to "module
+	unload".
+
+Sat Dec 20 23:01:31 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Increment line numbers when skipping comment lines in module
+	files. (Reported by Love Hörnquist-Åstrand).
+	* cmod_parse.c (get_word): Don't forget to increment the line
+	number when skipping past comments.
+	* testsuite/t036.sh: New file, testing for the bug.
+	* testsuite/t036.ok.in: New file.
+	* testsuite/t036-1: New file.
+	* testsuite/Makefile.am: Added test case t036.
+	* THANKS: New file, mentioning Love Hörnquist-Åstrand.
+
+Fri Dec 12 00:14:54 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.2.
+	* README.DEVO: Mention the ANSI2KNR_FILTER patch.
+
+Thu Dec 11 23:34:47 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* README: Add success story for 0.9.post.1.
+
+	First sketch of a "module avail" implementation.
+	* cmod.c (avail_modules_recursively): New function.
+	(avail_modules): New function.
+	(cmd_table): Expose "module avail".
+	* env.h, env.c: (envarray_locate): New function.
+	* env.c (envarray_locate_create): Use envarray_locate to simplify
+	code.
+	* Makefile.am (cmod_SOURCES): Added cmod_dirent.h.
+	* configure.in: Use AC_HEADER_DIRENT and AC_FUNC_CLOSEDIR_VOID.
+	* cmod_dirent.h: New file.
+
+Mon Dec  8 14:32:14 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* configure.in: Snapshot 0.9.post.1.
+
+	* RELEASING: Mention snapshot releases.  Mention the Lysator-local
+	paths.
+
+	Allow cmod to be compiled using compilers that don't understand
+	function prototypes.  This requires that the ANSI2KNR_FILTER patch
+	has been applied to automake when the distribution is made.
+	* Makefile.am (AUTOMAKE_OPTIONS): New variable.  Include ansi2knr.
+	(ANSI2KNR_FILTER): New variable.
+	* env.h, cmod_trace.h, cmod_parse.h, cmod_alloc.h, cmod.c,
+ 	cmod_parse.c, cmod_trace.c: Use prototypes in declarations only if
+ 	PROTOTYPES is defined.
+
+Sun Dec  7 00:21:08 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* cmod 0.9 released.
+
+	* NEWS: Set the release date.
+	* README: Report where cmod has been tested.
+
+	Use -pipe when compiling.  Turn on warnings if using GCC.
+	* configure.in: Add -pipe and a lot of -W<foo> flags to CFLAGS if
+	we are using GCC and if GCC supports the flags.
+	* acinclude.m4: New file.
+
+	Code cleanup.
+	* cmod.c (rm_module): Don't shadow the global variable optind.
+	(add_module): Likewise.
+	(list_modules): Mark unused arguments.
+
+	Use autoconf to check for __attribute__((unused)).
+	* unused.h: Rely on configure.in to define HAVE_ATTRIBUTE_UNUSED
+	if appropriate.
+	* configure.in: Check if the C compiler understands
+	__attribute__((unused)).
+
+Sat Dec  6 22:08:00 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Add a copyright notice to all source files.
+	* testsuite/Makefile.am, Makefile.am, create_sample, configure.in,
+	*.h, *.c: Copyright/license header added.
+
+	Fix "make check" when compiling in a subdirectory.
+	* testsuite/Makefile.am (MOSTLYCLEANFILES): Added generated files.
+	(%.out): The %.ok file may reside in . or in $(srcdir).
+
+	Port to HP/UX.  Fix the strdup replacement implementation.
+	Don't require vprintf.
+	* strdup.c (strdup): Don't forget to NUL-terminate the copy.
+	* configure.in: Default prefix is /sw/modules.  Call
+ 	AC_REVISION. Call AC_AIX, AC_ISC_POSIX and AC_MINIX in case that
+ 	helps somebody somewhere.  Call AM_C_PROTOTYPES to get working
+	prototypes on HP/UX.  Call AC_REPLACE_FUNCS on strdup (not
+	AC_CHECK_FUNCS).
+	* cmod_trace.c, cmod_trace.h (trace): Provide an alternate
+	implementation for those sites that lack vprintf.
+	* Makefile.am (cmod_LDADD): Add @LIBOBJS@.
+	(EXTRA_cmod_SOURCES): Removed, since it is apparently not
+	necessary.
+
+	Describe how releases are made.
+	* Makefile.am (EXTRA_DIST): Added RELEASING.
+	* RELEASING: New file.
+
+Sat Dec  6 03:04:57 1997  Per Cederqvist  <ceder@gratia>
+
+	Parse command line arguments with the same mechanism as commands
+	in module files.
+	* cmod.c (warning): Include the word "module" in the warning
+	message.
+	(rm_module): Handle more than one module.
+	(add_module): Likewise.
+	(list_modules): Adapted the API so that this function can be used
+	as callback in a struct cmd entry.
+	(no_op): New struct cmd callback function that does nothing.
+	(cmd_table): Added "module unload" and "module list".
+	(main): argv is a const char **.  Use cmod_parse_argv to simplify
+	code and avoid encoding the same information more than once.
+	* cmod_parse.c (locate_match): New argument: arg_1.  This function
+	can now parse the command line argument of cmod.  All callers
+	updated.
+	(cmod_parse_argv): New function.
+	* cmod_parse.h (cmod_parse_argv): New function.
+	* testsuite/Makefile.am: Added test case t034 and t035.
+
+	Regenerate test suite files when the Makefile changes.
+	* testsuite/Makefile.am (%.sh): Depend on Makefile.
+	(%.ok): Depend on Makefile.
+
+Sat Dec  6 01:14:35 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Create an autoconf/automake framework.
+	* README.DEVO: New file.
+	* testsuite/t030-vi/placeholder: New file.
+	* NEWS: New file.
+	* README: New file.
+	* configure.in: New file.
+	* testsuite/Makefile.am: New file.
+	* Makefile.am: New file.
+	* AUTHORS: New file.
+	* Makefile: Removed.  This is now generated, and there is no need
+	to keep generated files under version control in this project.
+
+Fri Dec  5 20:58:01 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Get rid of warnings from GCC by telling the compiler that some
+	function arguments are expected to be unused.
+	* cmod_main.h (out_of_memory): Removed (now static in cmod_alloc.c).
+	* cmod_alloc.c (out_of_memory): Moved here from cmod.c and made
+	* cmod.c: Use UNUSED to flag unused arguments to functions.
+	static.
+
+	Move out_of_memory to cmod_alloc.c and make it static.
+	* cmod.c (out_of_memory): Moved to cmod_alloc.c.
+	* unused.h: New file, that implements the UNUSED extension to the
+	C language, which explicitly states that an argument to a function
+	is unused.
+
+Thu Dec  4 18:10:09 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* sh.in: Ported to HP-UX /bin/sh.
+
+	Use wrappers around malloc/realloc/free/strdup, so that cmod works
+	even when malloc(0) returns 0.
+	* cmod_alloc.h: New file.
+	* cmod_alloc.c: New file.
+	* cmod.c, cmod_parse.c, env.c: Use "cmod_alloc.h" instead of
+	malloc/realloc/free/strdup.
+	* Makefile (prefix): Default to /sw/modules.
+	(CMOD_OBJS): Added cmod_alloc.o.
+
+
+Fri Nov 21 09:43:37 1997  Per Cederqvist  <ceder@gratia>
+
+	More efficient use of env.h.
+	* cmod_parse.c (get_word_expand_variables): Use env_value instead
+	of iterating through the fragments and concatenating them
+	together.
+
+Sun Nov  9 22:43:56 1997  Per Cederqvist  <ceder@gratia>
+
+	There used to be two kinds of environment variables: fragmented
+	and unfragmented.  Change that, so that all variables can be
+	treated ad fragmented or unfragmented as need be.  Convert the
+	values dynamically and transparently between the different kinds.
+	As a bonus effect, the fragment separator can be different each
+	time the value of a variable is retrieved.
+	* env.h, env.c (env_frag_present): New argument: sep.
+	(env_append_one_frag): Likewise.
+	(env_append_frags): Likewise.
+	(env_prepend_one_frag): Likewise.
+	(env_prepend_frags): Likewise.
+	(env_remove_one_frag): Likewise.
+	(env_remove_frags): Likewise.
+	(env_iterate): Likewise.
+	(env_value): New function.
+	(envarray_locate_create): Removed the sep argument.
+	* env.c (struct env): Removed the frag_delimiter member.
+	Added current_delimiter and non_fragmented.  All users updated.
+	(env_ctor): Adapted accordingly.
+	(env_dtor): Likewise.
+	(env_invalidate_unfragmented): New static function.
+	(env_invalidate_fragmented): New static function.
+	(env_fragment): New static function.
+	* cmod_parse.c (get_word_expand_variables): Adapted to new API of
+	env.h.
+	* cmod.c (append_path): Adapted to new API of env.h.
+	(prepend_path): Likewise.
+	(remove_path): Likewise.
+	(set_env): Likewise.
+	(unset_env): Likewise.
+	(do_use_path): Likewise.
+	(do_unuse_path): Likewise.
+	(open_module): Likewise.
+	(do_rm_module): Likewise.
+	(do_add_module): Likewise.
+	(list_modules): Likewise.
+
+Sat Nov  8 03:27:19 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Parsing implemented.  All test cases now pass.
+	* cmod_parse.c (struct undo_chain): Changed API of the undo callback.
+	(hunt_for): Moved here from cmod.c.
+	(get_word): Likewise.
+	(get_word_expand_variables): Likewise.
+	(syntax_error): Likewise.
+	(locate_match): New function.
+	(cmod_parse_module): Implemented.
+	* cmod.c (get_word): Moved to cmod_parse.c.
+	(hunt_for): Likewise.
+	(get_word_expand_variables): Likewise.
+	(syntax_error): Likewise.
+	(get_eol): Removed.
+	(append_path): New API to match the callback in "struct cmd".
+	(prepend_path): Likewise.
+	(remove_path): Likewise.
+	(set_env): Likewise.
+	(unset_env): Likewise.
+	(use_path): Likewise.
+	(unuse_path): Likewise.
+	(rm_module): Likewise.
+	(add_module): Likewise.
+	(do_use_path): New function.
+	(do_unuse_path): New function.
+	(parse_module_for_removal): Removed.
+	(do_rm_module): New function.
+	(do_add_module): New function.
+	(cmd_table): New constant.
+	(parse_module): New API.  Use cmod_parse_module to parse the
+	module files data-driven, using cmd_table.
+	(main): Use do_add_module etc instead of add_module etc.
+	* cmod_main.h (cmod_errors): Now a global variable.  Was formerly
+	known as "error".  All users updated.
+	(global_env): Now a global variable.
+	* cmod_parse.h (struct cmd): Add const qualifiers and arguments to
+	doit/undo callbacks.
+	(cmod_parse_module): New name for former parse_module.
+	
+Fri Nov  7 09:06:49 1997  Per Cederqvist  <ceder@gratia>
+
+	More parsing.
+	* Makefile (CMOD_OBJS): Added cmod_parse.o.
+	* cmod_parse.h (parse_module): New function.
+	* cmod_parse.c: New file.
+
+Mon Nov  3 23:59:44 1997  Per Cederqvist  <ceder@gratia>
+
+	Parsing is needed.  This is but a tiny beginning.
+	* cmod_parse.h: New file.
+
+Fri Oct  3 08:20:41 1997  Per Cederqvist  <ceder@link>
+
+	Added the beginnings of tracing support.
+	* Makefile (CMOD_OBJS): Added cmod_trace.o.
+	* env.c (env_append_one_frag): Trace with TRACE_ASSIGN.
+	(env_remove_one_frag): Trace with TRACE_ASSIGN.
+	(env_prepend_one_frag): Trace with TRACE_ASSIGN.
+	(env_setenv): Trace with TRACE_ASSIGN.
+	(env_unsetenv): Trace with TRACE_ASSIGN.
+	* cmod_trace.h: New file.
+	* cmod_trace.c: New file.
+
+Wed Oct  1 00:24:31 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Support for generated test files.
+	* Makefile (SH_TESTS): Added testsuite/*.sh.in.
+	(testsuite/%.sh): Generate from testsuite/%.sh.in.
+
+Sun Sep 28 21:49:34 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Loading a module that is already loaded is treated as an unload
+	followed by a load.
+	* cmod.c (add_module): Loading an already loaded module is equal
+	to first unloading it and then reloading it.  New arguments:
+	containing_filename and containing_lineno.  All callers updated.
+
+	Attempts to unload a module that isn't loaded results in a
+	warning, but no action.
+	* env.h (envarray_locate_create): The returned value is only valid
+	until the next call to envarray_locate_create.
+	* cmod_main.h (CMOD_EXIT_WARNING): New constant.
+	(CMOD_EXIT_ERROR): New constant.
+	* cmod.c: Use CMOD_EXIT_ERROR instead of exit(1).
+ 	(warning): New function.
+	(warning_found): New variable.
+	(rm_module): New arguments: containing_filename and
+	containing_lineno.  All callers updated.  Don't remove the module
+	unless it was already loaded.
+	(main): Use CMOD_EXIT_WARNING as exit status if any warnings were
+	generated.
+
+	Enforce my coding standards.
+	* cmod.c (usage): Reformatted the source to fit within 79 columns.
+	(list_modules): Added missing "const" qualifier.
+
+Sun Sep 28 21:26:50 1997  Kent Engström  <kent@lysator.liu.se>
+
+	Show usage instead of just "bad usage".
+	* cmod.c (usage): usage message.
+	
+	Implement "module list".
+	* cmod.c (list_modules): New function.
+
+	Allow multiple arguments to add/load and rm/unload.
+	* cmod.c (main): add loop round add/load rm/unload call.
+
+Sun Sep 28 01:28:19 1997  Per Cederqvist  <ceder@lysator.liu.se>
+	
+	Support generated .ok files.
+	* Makefile (INITFILES): Added .init suffix.
+	(PATHFILES): Added .init suffix.
+	(install): Remove the .init suffix.
+	(install-etc): New target.  Moved half of the things in
+	install-sample to this target.  Remove the .init suffix.
+	(clean): Remove the .ok files that are generated from .ok.in files.
+	(%.init): New name for former % target.
+	(testsuite/%.out): Depend on testsuite/%.ok.  Don't auto-generate
+	the .ok file.
+	(testsuite/%.ok): New target, to generate files from .ok.in
+	files.
+
+	Expand environment variables using ${HOME} or $env(HOME) syntax.
+	* env.c, env.h (envarray_locate_create): Handle read_env==-1 specially.
+	* cmod.c (hunt_for): New function.
+	(get_word_expand_variables): New function.
+	(parse_module): Use expand environment variables in certain places.
+	(parse_module_for_removal): Likewise.
+
+Sat Sep 27 14:41:11 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Support "module use <dir>" and "module unuse <dir>" from the
+	command line and in module files.
+	* env.h (env_iterate): New function.
+	(envarray_dump): Don't dump clean variables.
+	* env.c (struct env): New member: clean.
+	(env_ctor): Set clean to 0.
+	(env_append_one_frag): Likewise.
+	(env_remove_one_frag): Likewise.
+	(env_prepend_one_frag): Likewise.
+	(env_setenv): Likewise.
+	(env_unsetenv): Likewise.
+	(env_iterate): New function.
+	(envarray_locate_create): Set clean to 1 if the variable was read
+	from the environment.
+	(envarray_dump): Don't dump clean variables.
+	* cmod.c (MODULE_HOME): #define removed.
+	(module_home): Variable removed.
+	(use_path): New function.
+	(unuse_path): New function.
+	(parse_module): Handle "use" and "unuse".
+	(parse_module_for_removal): Likewise.
+	(open_module): New function, which uses the module search path to
+	open a module.
+	(add_module): Use open_module to open modules.
+	(rm_module): Likewise.
+	(main): Don't attempt to set up a default for the module search
+	path.  Handle "use" and "unuse".  Give a usage error if an unknown
+	or bad command is given.
+
+	It is now possible to install cmod.
+	* Makefile (bindir): New constant.
+	(moduledir): New constant.
+	(MODULEPATH): Constant removed.
+	(INSTALL): New constant.
+	(INSTALL_PROG): New constant.
+	(INSTALL_DATA): New constant.
+	(PATHFILES): New constant.
+	(install): New target.
+	(install-sample): New target.
+	(clean): Remove $(PATHFILES).
+	(%): Substitute @INIT@.
+	* path.sh.in: New file.
+	* path.csh.in: New file.
+	* create_sample: New file.
+	* mkinstalldirs: New file.
+	* install-sh: New file.
+
+	Don't append fragments that are already present.
+	* env.c (env_frag_present): New function.
+	(env_append_frags): Handle the "unique" argument.
+	* env.h (env_frag_present): New function.
+	* cmod.c (add_module): Add the module name to LOADEDMODULES even
+	if it is already present there.
+
+	Use correct csh syntax.
+	* env.c (env_append_frags): Emit "unsetenv" instead of "unset"
+	when using csh-style syntax.
+
+	Create init files.
+	* sh.in: New file.
+	* csh.in: New file.
+	* Makefile (prefix): New constant.
+	(CMOD): New constant.
+	(MODULEPATH): New constant.
+	(INITFILES): New constant.
+	(all): Depend on cmod and $(INITFILES).
+	(clean): New target.
+	(%: %.in): New target, for the init files.
+
+	MODULEPATH, not MODULESHOME, determine where we load modules.
+	* Makefile (MODULEINIT): Set MODULEPATH, not MODULESHOME.
+	* cmod.c (main): MODULEPATH, not MODULESHOME, determine where we
+	load modules.
+
+	Don't shuffle the path when removing fragments.
+	* env.c (env_remove_one_frag): Don't alter the order of the
+	fragments that are moved down.
+
+Sat Sep 27 14:38:00 1997  Kent Engström  <kent@lysator.liu.se>
+
+	Really minor typo fix.
+	* cmod.c (add_module, rm_module): Added space in error message.
+
+Fri Sep 26 23:21:05 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	* strdup.c: New file, for those with no strdup.
+
+	Move the environment handling code to env.h/env.c, redesign it,
+	and rewrite large parts of it.  Add comments about it.  Use it in
+	the main program.
+	* env.h: New file.
+	* env.c: New file.
+	* cmod_main.h: New file.
+	* cmod.c: Use env.h to handle the environment.
+ 	(struct list): Removed.
+	(env): Removed.
+	(nenv): Removed.
+	(init_list): Removed.
+	(free_list_contents): Removed.
+	(env_do_append_frag): Removed.
+	(env_do_remove_frag): Removed.
+	(append_frags): Removed.
+	(remove_frags): Removed.
+	(env_get_list_create): Removed.
+	(env_present): Removed.
+	(env_append_frags): Removed.
+	(env_prepend_frags): Removed.
+	(env_set_frags): Removed.
+	(env_remove_frags): Removed.
+	(env_remove_list): Removed.
+	(dump_env): Removed.
+	(out_of_memory): New function.
+	(get_word): Use out_of_memory to flag allocation failures.
+	(add_module): Likewise.
+	(rm_module): Likewise.
+	(global_env): New variable.
+	(append_path): New function.
+	(prepend_path): New function.
+	(remove_path): New function.
+	(set_env): New function.
+	(unset_env): New function.
+	(parse_module): Updated to reflect the above changes.
+	(parse_module_for_removal): Likewise.
+	(main): Create global_env.  Use envarray_dump to dump the
+	environment.  Support csh syntax.
+	* Makefile (CFLAGS): Warn a lot.
+	(CMOD_OBJS): New constant.
+	(cmod): Link with env.o.
+	(cmod.o, env.o): Include hand-written dependencies to .h-files.
+
+Thu Sep 25 22:09:23 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Support "make -j" and "make recheck" when no checks have been
+	run.  Improved test suite support.
+	* Makefile (srcdir): New constant.
+	(check): Don't depend on cmod.
+	(MODULEINIT): New constant.
+	(testsuite/%.out): Depend on cmod.  Set up the environment for the
+ 	test cases with MODULEINIT.  Run diff if the output differs from
+ 	the expected result.
+	(recheck): Use $(RM) instead of rm.
+
+	Improved error handling.
+	* cmod.c (parse_module): Check for end-of-file in the middle of
+	parsed lines from the module file.
+	(parse_module_for_removal): Likewise.
+	(main): Exit with exit status 1, without dumping the environment,
+	if an error has occured.
+
+Thu Sep 25 09:05:12 1997  Per Cederqvist  <ceder@gratia>
+
+	Minor bugfixes.
+	* Makefile (testsuite/%.out): Don't talk so much.
+	* cmod.c (append_frags): Handle the empty string correctly.
+	(dump_env): Separate statements with semicolons.  Added export
+	statements.
+
+Tue Sep 23 22:29:58 1997  Per Cederqvist  <ceder@lysator.liu.se>
+
+	Read MODULESHOME from the environment.
+	* cmod.c: 
+	(module_home): New global variable.
+	(add_module): Use module_home instead of MODULE_HOME.
+	(rm_module): Likewise.
+	(main): Initialize module_home from the environment variable
+	MODULESHOME (with fallback on the define MODULE_HOME).
+
+	Test prepend-path on empty path.
+	* testsuite/t002-1: New file.
+	* testsuite/t002.ok: New file.
+	* testsuite/t002.sh: New file.
+
+	Added the beginnings of a test suite.
+	* testsuite/t001.sh: New file.
+	* testsuite/t001.facit: New file.
+	* Makefile:
+ 	(cmod): Remove all test results.
+	(TEST_RESULTS): New variable.
+	(SH_TESTS): New variable.
+	(check): New target.
+	(testsuite/%.out): New target.
+	(recheck): New target.
+
+Wed Sep 10 22:44:43 1997  Per Cederqvist  <ceder@gratia>
+
+	Fix minor problems in code committed by Henrik.
+	* cmod.c (env_do_remove_frag): Handle NULL returns from realloc.
+	(remove_frags): Plug a memory leak by freeing the copy.

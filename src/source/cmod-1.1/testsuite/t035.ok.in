@@ -1,0 +1,3 @@
+@MODULEPATH@/t035-1:1: syntax error: too few arguments
+  Offending line: prepend-path FOO
+1

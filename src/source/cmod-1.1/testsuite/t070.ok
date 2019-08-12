@@ -1,0 +1,9 @@
+LOADEDMODULES=t070-1;
+export LOADEDMODULES;
+cmd=prepend-path;
+export cmd;
+var=PATH;
+export var;
+PATH=/opt/SUNwsig/fuego;
+export PATH;
+0

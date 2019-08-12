@@ -1,0 +1,31 @@
+cmod_echo=:
+if [ -n "$BASH" ]; then
+  $cmod_echo cmod: detected bash
+  . @INIT@/bash.init
+elif [ -n "$ZSH_VERSION" ]; then
+  $cmod_echo cmod: detected zsh
+  . @INIT@/zsh.init
+elif [ -n "$FCEDIT" ]; then
+  case x"$VERSION" in
+    xzsh*)
+      $cmod_echo cmod: detected old zsh
+      . @INIT@/zsh.init;;
+    *)
+      $cmod_echo cmod: detected ksh
+      . @INIT@/ksh.init;;
+  esac
+else
+  $cmod_echo cmod: detected sh
+  . @INIT@/sh.init
+fi
+
+if [ -z "$LOADEDMODULES" ]; then
+  $cmod_echo cmod: setting up environment...
+  PATH=
+  MANPATH=
+  INFOPATH=
+  export PATH MANPATH INFOPATH
+  module add default
+else
+  $cmod_echo cmod: retaining environment...
+fi

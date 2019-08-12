@@ -1,0 +1,55 @@
+High priority (things that stops a release)
+===========================================
+
+(Nothing is left on this list.)
+
+
+
+Medium priority (things that really would be nice)
+==================================================
+
+* Write a test program that checks that memmove handles overlapping
+  regions of memory correctly.
+
+* env_environ() should return an enum instead of a magic number.
+
+* parse_module() should make a copy of the environment before it
+  alters it.  That way, a perfect undo could be made if the module has
+  to be aborted.  The way things are done now unfortunate side effects
+  sometimes occur (for instance if you use setenv on a variable that
+  already had a value).
+
+* "module avail" should detect the actual screen width instead of
+  using a fixed constant (which is currently 80).
+
+
+
+Low priority (worthwhile things that I don't consider very important)
+=====================================================================
+
+* Jens Larsson thinks that the commands initadd and initdel should be
+  added.
+
+* Path optimizer: Follow symbolic links to get a faster shell.  If
+  /foo/bin and /bar/bin ultimately points to the same directory after
+  symlinc expansion there is no need to include them both in the
+  optimized path.
+
+* Path optimizer: remove non-existing directories.
+
+* "module show foo".
+
+* "module help foo".
+
+* Consider adding options to "module avail" analogous to the GNU ls
+  options -1, -w COLS and --width=COLS.
+
+
+
+Dubious (things that maybe shouldn't be implemented at all)
+===========================================================
+
+* We maybe need a new parser that understands options.  Once we have
+  that we may replace "module try-add xyzzy" with "module add
+  --ignore-missing xyzzy".  On the other hand, this may be a bad
+  idea.  Think more about this.

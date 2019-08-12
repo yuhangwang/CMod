@@ -1,0 +1,8 @@
+two
+four
+five
+LOADEDMODULES=t071-1;
+export LOADEDMODULES;
+x=y;
+export x;
+0

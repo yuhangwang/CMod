@@ -1,0 +1,121 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+/* Define if on AIX 3.
+   System headers sometimes define this.
+   We just want to avoid a redefinition error message.  */
+#ifndef _ALL_SOURCE
+#undef _ALL_SOURCE
+#endif
+
+/* Define if the closedir function returns void instead of int.  */
+#undef CLOSEDIR_VOID
+
+/* Define to empty if the keyword does not work.  */
+#undef const
+
+/* Define if you don't have vprintf but do have _doprnt.  */
+#undef HAVE_DOPRNT
+
+/* Define if you have <sys/wait.h> that is POSIX.1 compatible.  */
+#undef HAVE_SYS_WAIT_H
+
+/* Define if you have the vprintf function.  */
+#undef HAVE_VPRINTF
+
+/* Define as __inline if that's what the C compiler calls it.  */
+#undef inline
+
+/* Define if on MINIX.  */
+#undef _MINIX
+
+/* Define if the system does not provide POSIX.1 features except
+   with this defined.  */
+#undef _POSIX_1_SOURCE
+
+/* Define if you need to in order for stat and other things to work.  */
+#undef _POSIX_SOURCE
+
+/* Define to `unsigned' if <sys/types.h> doesn't define.  */
+#undef size_t
+
+/* Define if the `S_IS*' macros in <sys/stat.h> do not work properly.  */
+#undef STAT_MACROS_BROKEN
+
+/* Define if you have the ANSI C header files.  */
+#undef STDC_HEADERS
+
+/* Does the compiler understand __attribute__((unused))?
+   This is used by gcc to indicate that a parameter to a function is
+   unused, like this:
+   .
+         int foo(int x __attribute__((unused)))
+         {
+             // code that doesn't use the variable x
+         }
+   .
+   Define this to one if the compiler understands it.  It will then
+   emit fewer warnings about unused arguments. */
+#undef HAVE_ATTRIBUTE_UNUSED
+
+/* Is errno declared in <errno.h>?  Some ancient systems don't declare
+   it. */
+#undef HAVE_ERRNO_IN_ERRNO_H
+
+/* Does the compiler understand ANSI-style prototypes? */
+#undef PROTOTYPES
+
+/* Does the compiler understand "static inline" as in "static inline
+   int foo() { return bar(); }"?  If it does, define static_inline to
+   "static inline", otherwise to "static" (or, possibly, "inline").  */
+#define static_inline static
+
+/* The name and version of this software distribution.  These
+   originates from AM_INIT_AUTOMAKE in the configure.in file.  */
+#define PACKAGE "configure-generated"
+#define VERSION "configure-generated"
+
+/* Can <sys/types.h> and <sys/param.h> both be included? */
+#undef SYS_TYPES_WITH_SYS_PARAM
+
+/* Full path (as a string) to the pwd program.  This is only used if
+   neither getcwd nor getwd is found in libc. */
+#undef PWD_PATH
+
+/* Define if you have the getcwd function.  */
+#undef HAVE_GETCWD
+
+/* Define if you have the getwd function.  */
+#undef HAVE_GETWD
+
+/* Define if you have the memmove function.  */
+#undef HAVE_MEMMOVE
+
+/* Define if you have the readlink function.  */
+#undef HAVE_READLINK
+
+/* Define if you have the strdup function.  */
+#undef HAVE_STRDUP
+
+/* Define if you have the <dirent.h> header file.  */
+#undef HAVE_DIRENT_H
+
+/* Define if you have the <ndir.h> header file.  */
+#undef HAVE_NDIR_H
+
+/* Define if you have the <stdarg.h> header file.  */
+#undef HAVE_STDARG_H
+
+/* Define if you have the <stdlib.h> header file.  */
+#undef HAVE_STDLIB_H
+
+/* Define if you have the <string.h> header file.  */
+#undef HAVE_STRING_H
+
+/* Define if you have the <sys/dir.h> header file.  */
+#undef HAVE_SYS_DIR_H
+
+/* Define if you have the <sys/ndir.h> header file.  */
+#undef HAVE_SYS_NDIR_H
+
+/* Define if you have the posix library (-lposix).  */
+#undef HAVE_LIBPOSIX

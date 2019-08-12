@@ -1,0 +1,2 @@
+setenv crazy ""
+append-path crazy "kalle"
