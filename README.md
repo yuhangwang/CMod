@@ -48,11 +48,11 @@ The source file can be found at http://www.lysator.liu.se/cmod/
  - You can add more module files to `~/modules` similar to the python example.
  
  # Commands available in a CMod specification script
-- `append-path`: Appending a directory to a path.
-- `prepend-path`: Prepending a directory to a path.
-- `remove-path`: Removing a directory from a path.
-- `setenv`: Setting a variable to a fixed value.
-- `unsetenv`: Unsetting a variable.
+- `append-path`: appending a directory to a path.
+- `prepend-path`: prepending a directory to a path.
+- `remove-path`: removing a directory from a path.
+- `setenv`: setting a variable to a fixed value.
+- `unsetenv`: unsetting a variable.
 
 # Most commonly used module commands
 - `module add`: add module(s), e.g., `module add python/3.7`
@@ -66,7 +66,7 @@ The source file can be found at http://www.lysator.liu.se/cmod/
 - `module avail`: list all available modules, a very useful feature to see all the software you have installed.
 
 
-# Documentation
+# Full documentation
 A complete documentation can be found in the `info` folder of your cmod installation path.  
 You can also browse the documentation contained in the [usage/cmod.md](https://github.com/yuhangwang/CMod/blob/master/usage/cmod.md)
 file of this Github repository.
