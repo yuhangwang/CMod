@@ -43,6 +43,5 @@ The source file can be found at http://www.lysator.liu.se/cmod/
 
 # Documentation
 A complete documentation can be found in the `info` folder of your cmod installation path.  
-You can also browse the documentation contained in the   
-[usage/cmod.md](https://github.com/yuhangwang/CMod/blob/master/usage/cmod.md)  
+You can also browse the documentation contained in the [usage/cmod.md](https://github.com/yuhangwang/CMod/blob/master/usage/cmod.md)
 file of this Github repository.
