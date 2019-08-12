@@ -19,7 +19,8 @@ The source file can be found at http://www.lysator.liu.se/cmod/
 - `make`
 - `make check`
 - `make install`
-- If you are using `bash` shell, add the following line to your `.bashrc` file.
+- If you are using `bash` shell, add the following line to your `.bashrc` 
+  (or `.bash_profile` if you are using Mac OS) file.
   ```source $HOME/install/cmod/1.1/etc/cmod/bash.init```
 - If you are using `tcsh` shell, add the following line to your `.cshrc` file.
   ```source $HOME/install/cmod/1.1/etc/cmod/tcsh.init```
