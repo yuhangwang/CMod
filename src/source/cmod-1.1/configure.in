@@ -18,8 +18,11 @@ dnl  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 dnl Process this file with autoconf to produce a configure script.
 
 AC_REVISION($Revision: 1.44 $)dnl
-AC_INIT(cmod.c)
-AM_INIT_AUTOMAKE(cmod, 1.1)
+dnl AC_INIT(cmod.c)
+AC_INIT([cmod], [1.1], [cmod.c])
+dnl AM_INIT_AUTOMAKE(cmod, 1.1)
+AM_INIT_AUTOMAKE
+
 AM_CONFIG_HEADER(config.h)
 
 dnl Checks for programs.
@@ -63,7 +66,11 @@ CMOD_HEADER_PARAM
 AC_CHECK_HEADERS(stdlib.h stdarg.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AM_C_PROTOTYPES
+dnl fix: https://github.com/chokkan/crfsuite/issues/30
+AC_C_PROTOTYPES
+AC_HEADER_STDC
+AC_CHECK_HEADERS("string.h")
+
 AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T

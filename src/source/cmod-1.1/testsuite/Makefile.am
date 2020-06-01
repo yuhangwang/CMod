@@ -22,7 +22,7 @@
 ## Process Makefile.in with configure to produce Makefile.
 ## Process Makefile with make to produce the output string "All tests passed".
 
-AUTOMAKE_OPTIONS = ../ansi2knr gnu
+AUTOMAKE_OPTIONS =  gnu
 
 PYTHON = @PYTHON@
 RM = rm -f

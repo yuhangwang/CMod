@@ -18,7 +18,7 @@
 ## Process this file with automake to produce Makefile.in
 
 SUBDIRS = testsuite
-AUTOMAKE_OPTIONS = ansi2knr gnu
+AUTOMAKE_OPTIONS = gnu
 RM = rm -f
 
 info_TEXINFOS = cmod.texi
